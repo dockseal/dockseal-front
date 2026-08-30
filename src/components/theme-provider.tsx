@@ -1,55 +1,69 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
-type Theme = 'dark' | 'light' | 'system'
+type TRawTheme = 'dark' | 'light' | 'system'
+type TTheme = 'dark' | 'light'
 
-type ThemeProviderProps = {
+interface IThemeProviderProps {
 	children: React.ReactNode
-	defaultTheme?: Theme
+	defaultTheme?: TRawTheme
 	storageKey?: string
 }
 
-type ThemeProviderState = {
-	theme: Theme
-	setTheme: (theme: Theme) => void
+interface IThemeProviderState {
+	rawTheme: TRawTheme
+	setTheme: (theme: TRawTheme) => void
+	theme: TTheme
 }
 
-const initialState: ThemeProviderState = {
-	theme: 'system',
+const initialState: IThemeProviderState = {
+	rawTheme: 'system',
 	setTheme: () => null,
+	theme: 'dark',
 }
 
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
+const ThemeProviderContext = createContext<IThemeProviderState>(initialState)
 
 export function ThemeProvider({
 	children,
 	defaultTheme = 'system',
 	storageKey = 'vite-ui-theme',
 	...props
-}: ThemeProviderProps) {
-	const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem(storageKey) as Theme) || defaultTheme)
+}: IThemeProviderProps) {
+	const [rawTheme, setRawTheme] = useState<TRawTheme>(
+		() => (localStorage.getItem(storageKey) as TRawTheme) || defaultTheme,
+	)
 
 	useEffect(() => {
 		const root = window.document.documentElement
 
 		root.classList.remove('light', 'dark')
 
-		if (theme === 'system') {
+		if (rawTheme === 'system') {
 			const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 
 			root.classList.add(systemTheme)
 			return
 		}
 
-		root.classList.add(theme)
-	}, [theme])
+		root.classList.add(rawTheme)
+	}, [rawTheme])
 
-	const value = {
-		theme,
-		setTheme: (theme: Theme) => {
-			localStorage.setItem(storageKey, theme)
-			setTheme(theme)
-		},
-	}
+	const value = useMemo(
+		() => ({
+			rawTheme,
+			setTheme: (theme: TRawTheme) => {
+				localStorage.setItem(storageKey, theme)
+				setRawTheme(theme)
+			},
+			theme:
+				rawTheme === 'system'
+					? window.matchMedia('(prefers-color-scheme: dark)').matches
+						? 'dark'
+						: 'light'
+					: rawTheme,
+		}),
+		[rawTheme, storageKey],
+	)
 
 	return (
 		<ThemeProviderContext.Provider {...props} value={value}>

@@ -1,0 +1,32 @@
+---
+description: React component patterns
+globs: src/**/*.{tsx,ts}
+alwaysApply: true
+---
+
+# React
+
+- Functional components and hooks only; respect Rules of Hooks.
+- UI event handlers use `handle` prefix (`handleSubmit`, `handleClose`).
+- Components are presentation-focused. Do not put requests, Axios, mocks, large schemas, constants or complex business rules inside components.
+- Split components that exceed about 250-300 lines, have multiple responsibilities, or mix rendering with business rules and data transformation.
+- Extract components, hooks, utils and schemas when a file starts accumulating responsibilities.
+- Do not duplicate JSX when a reusable component can solve the repetition.
+- Avoid derived state when values can be computed from props/query data.
+- Use `@/` imports.
+
+Valid:
+
+```tsx
+function handleOpenDetails() {
+  openDetails()
+}
+```
+
+Invalid:
+
+```tsx
+function openChat() {
+  axios.get('/chat')
+}
+```

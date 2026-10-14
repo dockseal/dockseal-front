@@ -1,0 +1,61 @@
+---
+description: API layer and TanStack Query
+globs: src/{api,queries,mutations,components,hooks,pages}/**/*
+alwaysApply: true
+---
+
+# API + TanStack Query
+
+- All backend communication follows this flow: Component -> query/mutation hook in `src/queries` or `src/mutations` -> `src/api/<domain>/<verb>-<resource>.ts` -> `src/lib/axios.ts` -> Backend.
+- Each file in `src/api` represents exactly one request, for example `get-shipments.ts`, `get-shipment.ts`, `create-shipment.ts`, `update-alert.ts`.
+- Do not group multiple requests in a resource/client object file. When touching legacy grouped requests, migrate only the affected request when practical.
+- Pages, components, and hooks must not call `fetch`, call `axios`, or build API URLs inline.
+- Axios configuration belongs in `src/lib/axios.ts`.
+- Request paths, params, bodies, content types, timeouts, and response types must follow `backend-api-contract.mdc`.
+- Server state must use TanStack Query: `useQuery` for reads and `useMutation` for writes.
+- Each query hook file owns a query-key factory for its resource. Compose keys from a root tuple. Do not add `*QueryGroup`, `toTanStackKey`, or a global `*_QUERY_KEYS` object.
+- Query hooks accept filters when the request has them. They export `updateCache` and `invalidate` for that hook's key.
+- Prefer `setQueryData` / `setQueriesData` when the cache already exists. Call `invalidateQueries` on that resource's key prefix only when a patch is impossible.
+- Query results must use descriptive aliases, for example `data: shipments`, `isLoading: isLoadingShipments`, `error: shipmentsError`.
+- Mutations live in `src/mutations`. They must use `mutateAsync` aliased with the `Fn` suffix, for example `mutateAsync: createShipmentFn`.
+- Mutation hooks are typed with `UseMutationOptions` minus `mutationFn`. Default `onSuccess` and `onError` run first; custom `onSuccess` / `onError` run after. Do not spread options on top of those handlers.
+- Zustand must never cache API responses or duplicate remote state.
+
+Valid:
+
+```ts
+export const shipmentsQueryKeys = {
+  all: ['shipments'] as const,
+  list: (filters: IGetShipmentsFilters) =>
+    [...shipmentsQueryKeys.all, 'list', filters] as const,
+  detail: (shipmentId: string) =>
+    [...shipmentsQueryKeys.all, 'detail', shipmentId] as const,
+}
+
+const {
+  data: shipments,
+  isLoading: isLoadingShipments,
+  error: shipmentsError,
+} = useShipments(filters)
+
+const { mutateAsync: createShipmentFn } = useCreateShipment({
+  onSuccess: (shipment) => {
+    navigate({ to: '/shipments/$shipmentId', params: { shipmentId: shipment.id } })
+  },
+})
+```
+
+Invalid:
+
+```ts
+useEffect(() => {
+  axios.get('/shipments')
+}, [])
+
+export const shipmentsResource = {
+  getShipments,
+  createShipment,
+}
+
+queryClient.invalidateQueries({ queryKey: SHIPMENTS_QUERY_KEYS.list(filters) })
+```

@@ -1,0 +1,45 @@
+---
+description: TypeScript naming and typing standards
+globs: src/**/*.{ts,tsx}
+alwaysApply: true
+---
+
+# TypeScript
+
+- Use `strict: true` and `erasableSyntaxOnly: true`.
+- Every interface must use the `I` prefix, for example `IUser`, `ILoginForm`, `IButtonProps`.
+- Every type alias must use the `T` prefix, for example `TUserRole`, `TLoginInput`.
+- Enum-like objects must use the `E` prefix, for example `EUserRole`.
+- Use `interface` for objects and props.
+- Use `type` for unions, intersections, aliases, `z.infer`, `Awaited`, `ReturnType` and primitive aliases.
+- Never use TypeScript `enum`; use `as const` objects plus a derived union type.
+- Never use `any`. Use `unknown` only when necessary, preferably at external boundaries, and narrow it before use.
+- Reusable cross-context types belong in `src/@types/*.d.ts`. Always `export` them. Use the `I` prefix for interfaces even when the name already starts with I (`IInfo`) and the `T` prefix for types (`TTable`).
+- Component-exclusive props interfaces may stay colocated only when they are not reused. They still use the `I` prefix.
+
+Valid:
+
+```ts
+export const EUserRole = {
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+} as const
+
+export type TUserRole =
+  | typeof EUserRole.ADMIN
+  | typeof EUserRole.USER
+
+export interface IUser {
+  id: string
+  name: string
+}
+```
+
+Invalid:
+
+```ts
+export enum ResourceStatus { Active = 'active' }
+interface User {}
+type UserRole = 'ADMIN' | 'USER'
+function parse(data: any) {}
+```

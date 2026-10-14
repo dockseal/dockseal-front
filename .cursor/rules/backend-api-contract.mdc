@@ -1,0 +1,47 @@
+---
+description: Backend API contract (FastAPI + OpenAPI) that src/api, mocks and types must follow
+globs: src/{api,queries,mutations,@types,env.ts,lib/axios.ts}/**/*
+alwaysApply: true
+---
+
+# Backend API Contract
+
+- The backend is the **FastAPI** app in the sibling repository `dockseal-api`. Locally it runs at `http://localhost:8000` and the frontend reads that origin from `VITE_API_URL` (`src/env.ts`, `.env.local`, `.env.example`). Never hardcode the host or port. Always call the backend through `api` from `src/lib/axios.ts`.
+- OpenAPI JSON is `http://localhost:8000/openapi.json`. Swagger UI is `http://localhost:8000/docs`.
+- Before creating or changing anything in `src/api`, `src/api/mocks`, `src/queries`, `src/mutations`, or API types in `src/@types`, read the live spec:
+
+```bash
+curl -s http://localhost:8000/openapi.json
+```
+
+- The OpenAPI document is the source of truth for path, HTTP method, parameters, body, response schema, and status codes. [`dockseal-api/docs/API.md`](../../../dockseal-api/docs/API.md) is the human guide. If the guide and the live spec disagree, follow the live spec and say so.
+- Product behavior that is not an HTTP contract belongs in `docs/`, not in `.cursor/rules`.
+- Do not invent endpoints, fields, pagination envelopes, or status codes. If `openapi.json` is unreachable, say so and use the shapes already written in `dockseal-api/docs/API.md`. Do not add a request or MSW handler that is absent from both.
+- Re-check these wire constraints against the live spec before coding:
+  - IDs are UUID strings.
+  - Dates travel as ISO 8601 UTC with `Z`. Format them only for display.
+  - Lists are raw JSON arrays. Existing collection filters use `limit` and `offset`, not `page`.
+  - Error bodies use `detail`.
+  - `POST /auth/login` is `application/x-www-form-urlencoded` with `username` (the e-mail) and `password`. The response is `access_token` and `token_type`. Load the user with `GET /auth/me`.
+  - Authenticated requests send `Authorization: Bearer <access_token>`.
+  - File uploads and `POST /analysis` use `multipart/form-data`.
+  - `POST /analysis` and `POST /shipments/{id}/validate` are slow. Set the request timeout to at least 90 seconds and show a loading state.
+- Types in `src/@types` mirror OpenAPI `components.schemas`: `Shipment` becomes `IShipment`; a request body schema becomes `ICreateShipmentInput` or the equivalent `I*Input`. Keep names, optionality, and formats identical to the spec.
+- MSW handlers mirror the real routes and response shapes.
+
+Valid:
+
+```ts
+// src/api/shipments/get-shipments.ts — GET /shipments?limit&offset
+export async function getShipments(filters: IGetShipmentsFilters) {
+  const response = await api.get<IShipment[]>('/shipments', { params: filters })
+
+  return response.data
+}
+```
+
+Invalid:
+
+```ts
+axios.get('http://localhost:3000/api/v1/shipments/')
+```

@@ -1,0 +1,28 @@
+---
+description: Zustand and client state rules
+globs: src/stores/**/*
+alwaysApply: true
+---
+
+# Client State (Zustand)
+
+- Remote/server state belongs to TanStack Query.
+- Global client state belongs to Zustand.
+- Allowed Zustand state: authentication session, persisted multi-step wizards and global user preferences.
+- Do not duplicate remote API data in Zustand.
+- Do not store page-local UI state or transient modal flags in Zustand when component state is sufficient.
+- Do not use React Context API for global state without a documented technical justification.
+
+Valid:
+
+```ts
+// src/stores/auth/sign-up.ts
+export const useSignUpStore = create(persist(...))
+```
+
+Invalid:
+
+```ts
+// Caching remote users from API in Zustand
+set({ users: await getUsers() })
+```

@@ -1,12 +1,14 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { useState } from 'react'
 
+import { RouteError } from '@/components/feedback/route-error'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { queryClient } from '@/lib/query-client'
 import { routeTree } from '@/route-tree.gen'
 
-const router = createRouter({ routeTree })
+const router = createRouter({ routeTree, context: { queryClient }, defaultErrorComponent: RouteError })
 
 declare module '@tanstack/react-router' {
 	interface Register {
@@ -15,22 +17,13 @@ declare module '@tanstack/react-router' {
 }
 
 export function App() {
-	const [queryClient] = useState(
-		() =>
-			new QueryClient({
-				defaultOptions: {
-					queries: {
-						staleTime: 1000 * 60 * 2, // 2 minutes
-					},
-				},
-			}),
-	)
-
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider defaultTheme="dark">
-				<RouterProvider router={router} />
-				<Toaster richColors closeButton />
+				<TooltipProvider>
+					<RouterProvider router={router} />
+					<Toaster richColors closeButton />
+				</TooltipProvider>
 			</ThemeProvider>
 		</QueryClientProvider>
 	)

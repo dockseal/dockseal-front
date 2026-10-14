@@ -83,7 +83,7 @@ curl -s http://localhost:8000/openapi.json
 - Existing scripts in `package.json` (do not add new ones for running the app locally or for CI/pipelines): `dev`, `dev:test`, `test`, `test:e2e`, `test:e2e:ui`, `build`, `build:test`, `preview`, `preview:test`, `lint`. These scripts are not an extra required gate beyond the checklist below.
 - Backend origin: `VITE_API_URL` in `src/env.ts`, `.env.local`, `.env.example`. Local FastAPI default in the rules: `http://localhost:8000`. Never hardcode the host or port. Call the backend through `api` from `src/lib/axios.ts`.
 - OpenAPI JSON: `http://localhost:8000/openapi.json`. Swagger UI: `http://localhost:8000/docs`.
-- Tests live in the root `test` folder, never inside `src`. Stack: Vitest, Playwright, Testing Library, and MSW.
+- Tests live in the root `test` folder, never inside `src`. Unit tests are `*.spec.ts`. End-to-end tests are `*.e2e-spec.ts`. Stack: Vitest, Playwright, Testing Library, and MSW.
 
 Official `src` folders, including ones that may not exist until the first file is added: `components`, `components/ui`, `pages`, `api`, `api/mocks`, `queries`, `mutations`, `hooks`, `utils`, `stores`, `schemas`, `constants`, `lib`, `assets`, and `@types`. `src/env.ts` stays inside `src`. Present today: `src/pages` (`_auth`, `_app`), `src/components`, `src/components/ui`, `src/api`, `src/api/mocks`, `src/mutations`, `src/hooks`, `src/stores`, `src/schemas`, `src/@types`, `src/lib`, `src/env.ts`, and `test/`.
 
@@ -92,6 +92,7 @@ Official `src` folders, including ones that may not exist until the first file i
 Source: `.cursor/rules/frontend-architecture.mdc` (`alwaysApply: true`, no globs). This document overrides legacy code and any conflicting older frontend convention.
 
 - Official stack: React, Vite, TypeScript, TanStack Router, TanStack Query, TanStack Devtools, React Hook Form, Zod, Zustand, Axios, Tailwind CSS v4, shadcn/ui, sonner, GSAP, Motion, Lenis, next-themes, and Biome.
+- Tests use Vitest, Playwright, Testing Library, and MSW. Unit tests are `*.spec.ts`. End-to-end tests are `*.e2e-spec.ts`. Tests live in the root `test` folder, never inside `src`.
 - Every request, mock, and API type follows the OpenAPI contract (`backend-api-contract.mdc`).
 - Global constants use `ALWAYS_UPPERCASE`; enum-like objects use the `E` prefix and `as const`.
 - Mocks live in `src/api/mocks`, with `index.ts` wiring the MSW worker, one handler per request, on the same routes as the real API when it exists.
@@ -121,6 +122,7 @@ Before finishing an implementation, confirm:
 
 Source: `.cursor/rules/frontend-structure.mdc` (`alwaysApply: true`, globs `src/**/*`).
 
+- Tests live in the root `test` folder, never inside `src`. Unit tests are `*.spec.ts`. End-to-end tests are `*.e2e-spec.ts`.
 - `src/pages` contains TanStack Router file routes only; keep route files thin.
 - `src/components` contains reusable application components with UI logic only.
 - `src/components/ui` contains only shadcn/ui primitives. Do not place business components there and avoid modifying these files.

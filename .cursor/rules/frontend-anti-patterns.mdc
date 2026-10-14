@@ -1,0 +1,30 @@
+---
+description: Prohibited anti-patterns
+globs: src/**/*
+alwaysApply: true
+---
+
+# Anti-patterns (do not introduce)
+
+- TypeScript `enum`; use `E*` `as const` objects instead.
+- `any`.
+- Interfaces without `I` prefix or type aliases without `T` prefix.
+- `export default` in app code, except generated files or tool-required config files.
+- Direct `fetch` or `axios` in pages, components or hooks.
+- Multiple API requests in the same `src/api` file.
+- Mocks inside React components. Use `src/api/mocks` for MSW.
+- Server state without TanStack Query.
+- Zustand as a remote cache.
+- React Context API for global state without a documented technical justification.
+- Internal navigation via `window.location`, `setView`, `activeTab` or other state-based view switching.
+- JSX duplication that a reusable component would remove.
+- Large schemas, global constants, business rules or reusable utilities inside components.
+- Dead code left in `src`.
+- English UI strings.
+- Utility files named `helpers.ts`, `misc.ts`, `common.ts` or `generic.ts`.
+- New `*Resource` objects grouping multiple HTTP methods.
+- New global `*_QUERY_KEYS` objects. Each query hook file owns its query-key factory.
+- `invalidateQueries` / `setQueryData` inside pages or feature components.
+- Duplicating server lists in Zustand when a query cache exists.
+
+When touching legacy code that violates these rules, improve the affected area without changing functional behavior or opening unrelated large refactors.

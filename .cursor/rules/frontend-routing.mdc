@@ -1,0 +1,32 @@
+---
+description: TanStack Router conventions
+globs: src/pages/**/*
+alwaysApply: true
+---
+
+# Routing
+
+- Use TanStack Router exclusively.
+- Use `createFileRoute` in `src/pages`; never edit generated route trees manually.
+- `layout.tsx` files represent route wrappers.
+- Folders starting with `_` represent contextual route groups, for example `_auth` and `_app`.
+- Navigate with `Link`, `Navigate`, `useNavigate`; no `window.location` for internal routes.
+- Do not use `setView`, `activeTab` or state-based view switching for product navigation.
+- Route files should stay thin and delegate UI, data access and business logic to components, hooks and API request files.
+
+Valid:
+
+```ts
+export const Route = createFileRoute('/_auth/sign-in')({
+  component: SignInPage,
+})
+
+navigate({ to: '/dashboard' })
+```
+
+Invalid:
+
+```ts
+setView('home')
+window.location.href = '/dashboard'
+```

@@ -1,0 +1,15 @@
+---
+description: Security, privacy, and Portuguese (Brazil) display language
+alwaysApply: true
+---
+
+# Security & Language
+
+- All UI text (labels, errors, toasts, placeholders) in **pt-BR**.
+- Validate and sanitize external input; no raw HTML injection (`dangerouslySetInnerHTML` without sanitization).
+- Do not put sensitive data in query params or persist beyond need (GDPR/LGPD).
+- Clear persisted auth and client state on sign-out.
+- Keep secrets and credentials out of source code and client-side persistence.
+
+Valid: `setError('Senha obrigatória')`
+Invalid: `setError('Password is required')`

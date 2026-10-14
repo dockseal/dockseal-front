@@ -1,0 +1,35 @@
+---
+description: Forms with react-hook-form and Zod
+globs: src/{pages,components,schemas}/**/*
+alwaysApply: true
+---
+
+# Forms
+
+- All forms use `react-hook-form`, `zod`, and `zodResolver`.
+- Large schemas live in `src/schemas` and use names like `login.schema.ts` or `user-form.schema.ts`.
+- Small component-exclusive schemas may stay close to the component only when they are not reusable and do not make the component large.
+- Submit handlers receive a prefixed inferred type, for example `TLoginInput = z.infer<typeof loginSchema>`.
+- Validation messages and all display text must be in pt-BR.
+- Wizards may persist data in Zustand between steps; validate each step with Zod.
+
+Valid:
+
+```ts
+type TSignInFormValues = z.infer<typeof signInSchema>
+
+const form = useForm<TSignInFormValues>({
+  resolver: zodResolver(signInSchema),
+})
+
+function handleSignInSubmit(data: TSignInFormValues) {}
+```
+
+Invalid:
+
+```ts
+const [email, setEmail] = useState('')
+if (!email.includes('@')) return
+
+function onSubmit(data: { email: string }) {}
+```

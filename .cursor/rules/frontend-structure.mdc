@@ -1,0 +1,48 @@
+---
+description: Frontend folder structure and code organization
+globs: src/**/*
+alwaysApply: true
+---
+
+# Frontend Structure
+
+- Official `src` folders: `components`, `components/ui`, `pages`, `api`, `api/mocks`, `queries`, `mutations`, `hooks`, `utils`, `stores`, `schemas`, `constants`, `lib`, `assets` and `@types`.
+- `src/env.ts` holds environment validation/configuration and stays inside `src`.
+- Tests live in the root `test` folder, never inside `src`.
+- `src/pages` contains TanStack Router file routes only; keep route files thin.
+- `src/components` contains reusable application components with UI logic only.
+- `src/components/ui` contains only shadcn/ui primitives. Do not place business components there and avoid modifying these files.
+- `src/api` contains one request per file. `src/api/mocks` is reserved for MSW mocks.
+- `src/queries` contains query groups and query hooks (`updateCache`, `invalidate`).
+- `src/mutations` contains write hooks. Do not add new domain TanStack Query/mutation modules under `src/hooks` when `src/queries` / `src/mutations` exist.
+- `src/lib` contains library configuration only, for example `axios.ts`, `query-client.ts`, `i18n.ts`.
+- `src/utils` contains reusable utilities organized by domain, for example `currency.ts`, `date.ts`, `number.ts`, `string.ts`, `array.ts`, `object.ts`. Avoid `helpers.ts`, `misc.ts`, `common.ts` and `generic.ts`.
+- `cn()` stays in `src/lib/utils.ts`, which is the shadcn alias. Do not add another `src/utils.ts`.
+- `src/hooks` contains reusable hooks organized by domain. Do not create context-free generic hooks.
+- `src/schemas` contains large Zod schemas named like `login.schema.ts` and `user-form.schema.ts`.
+- `src/constants` contains global constants in `ALWAYS_UPPERCASE` and enum-like `E*` objects with `as const`.
+- `src/api/mocks` holds MSW handlers that mirror real API routes (or exist on their own until a backend exists), with `index.ts` wiring the MSW worker.
+- Use pnpm only. Do not add new package.json scripts for running the app locally or for CI/pipelines. Biome is the linter.
+- `src/@types` contains types reused by multiple contexts.
+- New app files must use kebab-case. Exported components use PascalCase. Use named exports only.
+
+Valid:
+
+```ts
+// src/hooks/use-auth-session.ts
+export function useAuthSession() {}
+
+// src/constants/upload.ts
+export const MAX_UPLOAD_SIZE = 10
+```
+
+Invalid:
+
+```ts
+// src/pages/_app/dashboard.tsx
+export default function Dashboard() {}
+const data = await fetch('/shipments')
+
+// src/utils/helpers.ts
+export function formatAnything() {}
+```

@@ -10,79 +10,185 @@
 
 import { Route as rootRouteImport } from './pages/__root'
 import { Route as IndexRouteImport } from './pages/index'
+import { Route as AppLayoutRouteImport } from './pages/_app/layout'
+import { Route as AuthLayoutRouteImport } from './pages/_auth/layout'
+import { Route as AppAlertasRouteImport } from './pages/_app/alertas'
+import { Route as AppAnaliseRouteImport } from './pages/_app/analise'
+import { Route as AppAuditoriaRouteImport } from './pages/_app/auditoria'
+import { Route as AppConfiguracoesRouteImport } from './pages/_app/configuracoes'
 import { Route as AppDashboardRouteImport } from './pages/_app/dashboard'
-import { Route as AuthPasswordRecoveryRouteImport } from './pages/_auth/password-recovery'
-import { Route as AuthSignInRouteImport } from './pages/_auth/sign-in'
-import { Route as AuthSignUpRouteImport } from './pages/_auth/sign-up'
+import { Route as AuthLoginRouteImport } from './pages/_auth/login'
+import { Route as AuthRecuperarSenhaRouteImport } from './pages/_auth/recuperar-senha'
+import { Route as AuthSolicitarAcessoRouteImport } from './pages/_auth/solicitar-acesso'
+import { Route as AppEmbarquesIndexRouteImport } from './pages/_app/embarques/index'
+import { Route as AppEmbarquesShipmentIdRouteImport } from './pages/_app/embarques/$shipmentId'
+import { Route as AppEmbarquesNovoRouteImport } from './pages/_app/embarques/novo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppLayoutRoute = AppLayoutRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLayoutRoute = AuthLayoutRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppAlertasRoute = AppAlertasRouteImport.update({
+  id: '/alertas',
+  path: '/alertas',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppAnaliseRoute = AppAnaliseRouteImport.update({
+  id: '/analise',
+  path: '/analise',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppAuditoriaRoute = AppAuditoriaRouteImport.update({
+  id: '/auditoria',
+  path: '/auditoria',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/_app/dashboard',
+  id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppLayoutRoute,
 } as any)
-const AuthPasswordRecoveryRoute = AuthPasswordRecoveryRouteImport.update({
-  id: '/_auth/password-recovery',
-  path: '/password-recovery',
-  getParentRoute: () => rootRouteImport,
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
-const AuthSignInRoute = AuthSignInRouteImport.update({
-  id: '/_auth/sign-in',
-  path: '/sign-in',
-  getParentRoute: () => rootRouteImport,
+const AuthRecuperarSenhaRoute = AuthRecuperarSenhaRouteImport.update({
+  id: '/recuperar-senha',
+  path: '/recuperar-senha',
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
-const AuthSignUpRoute = AuthSignUpRouteImport.update({
-  id: '/_auth/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => rootRouteImport,
+const AuthSolicitarAcessoRoute = AuthSolicitarAcessoRouteImport.update({
+  id: '/solicitar-acesso',
+  path: '/solicitar-acesso',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
+const AppEmbarquesIndexRoute = AppEmbarquesIndexRouteImport.update({
+  id: '/embarques/',
+  path: '/embarques/',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppEmbarquesShipmentIdRoute = AppEmbarquesShipmentIdRouteImport.update({
+  id: '/embarques/$shipmentId',
+  path: '/embarques/$shipmentId',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppEmbarquesNovoRoute = AppEmbarquesNovoRouteImport.update({
+  id: '/embarques/novo',
+  path: '/embarques/novo',
+  getParentRoute: () => AppLayoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alertas': typeof AppAlertasRoute
+  '/analise': typeof AppAnaliseRoute
+  '/auditoria': typeof AppAuditoriaRoute
+  '/configuracoes': typeof AppConfiguracoesRoute
   '/dashboard': typeof AppDashboardRoute
-  '/password-recovery': typeof AuthPasswordRecoveryRoute
-  '/sign-in': typeof AuthSignInRoute
-  '/sign-up': typeof AuthSignUpRoute
+  '/login': typeof AuthLoginRoute
+  '/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/solicitar-acesso': typeof AuthSolicitarAcessoRoute
+  '/embarques/$shipmentId': typeof AppEmbarquesShipmentIdRoute
+  '/embarques/novo': typeof AppEmbarquesNovoRoute
+  '/embarques/': typeof AppEmbarquesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alertas': typeof AppAlertasRoute
+  '/analise': typeof AppAnaliseRoute
+  '/auditoria': typeof AppAuditoriaRoute
+  '/configuracoes': typeof AppConfiguracoesRoute
   '/dashboard': typeof AppDashboardRoute
-  '/password-recovery': typeof AuthPasswordRecoveryRoute
-  '/sign-in': typeof AuthSignInRoute
-  '/sign-up': typeof AuthSignUpRoute
+  '/login': typeof AuthLoginRoute
+  '/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/solicitar-acesso': typeof AuthSolicitarAcessoRoute
+  '/embarques/$shipmentId': typeof AppEmbarquesShipmentIdRoute
+  '/embarques/novo': typeof AppEmbarquesNovoRoute
+  '/embarques': typeof AppEmbarquesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppLayoutRouteWithChildren
+  '/_auth': typeof AuthLayoutRouteWithChildren
+  '/_app/alertas': typeof AppAlertasRoute
+  '/_app/analise': typeof AppAnaliseRoute
+  '/_app/auditoria': typeof AppAuditoriaRoute
+  '/_app/configuracoes': typeof AppConfiguracoesRoute
   '/_app/dashboard': typeof AppDashboardRoute
-  '/_auth/password-recovery': typeof AuthPasswordRecoveryRoute
-  '/_auth/sign-in': typeof AuthSignInRoute
-  '/_auth/sign-up': typeof AuthSignUpRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_auth/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/_auth/solicitar-acesso': typeof AuthSolicitarAcessoRoute
+  '/_app/embarques/$shipmentId': typeof AppEmbarquesShipmentIdRoute
+  '/_app/embarques/novo': typeof AppEmbarquesNovoRoute
+  '/_app/embarques/': typeof AppEmbarquesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/password-recovery' | '/sign-in' | '/sign-up'
+  fullPaths:
+    | '/'
+    | '/alertas'
+    | '/analise'
+    | '/auditoria'
+    | '/configuracoes'
+    | '/dashboard'
+    | '/login'
+    | '/recuperar-senha'
+    | '/solicitar-acesso'
+    | '/embarques/$shipmentId'
+    | '/embarques/novo'
+    | '/embarques/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/password-recovery' | '/sign-in' | '/sign-up'
+  to:
+    | '/'
+    | '/alertas'
+    | '/analise'
+    | '/auditoria'
+    | '/configuracoes'
+    | '/dashboard'
+    | '/login'
+    | '/recuperar-senha'
+    | '/solicitar-acesso'
+    | '/embarques/$shipmentId'
+    | '/embarques/novo'
+    | '/embarques'
   id:
     | '__root__'
     | '/'
+    | '/_app'
+    | '/_auth'
+    | '/_app/alertas'
+    | '/_app/analise'
+    | '/_app/auditoria'
+    | '/_app/configuracoes'
     | '/_app/dashboard'
-    | '/_auth/password-recovery'
-    | '/_auth/sign-in'
-    | '/_auth/sign-up'
+    | '/_auth/login'
+    | '/_auth/recuperar-senha'
+    | '/_auth/solicitar-acesso'
+    | '/_app/embarques/$shipmentId'
+    | '/_app/embarques/novo'
+    | '/_app/embarques/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppDashboardRoute: typeof AppDashboardRoute
-  AuthPasswordRecoveryRoute: typeof AuthPasswordRecoveryRoute
-  AuthSignInRoute: typeof AuthSignInRoute
-  AuthSignUpRoute: typeof AuthSignUpRoute
+  AppLayoutRoute: typeof AppLayoutRouteWithChildren
+  AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -94,43 +200,146 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/alertas': {
+      id: '/_app/alertas'
+      path: '/alertas'
+      fullPath: '/alertas'
+      preLoaderRoute: typeof AppAlertasRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/analise': {
+      id: '/_app/analise'
+      path: '/analise'
+      fullPath: '/analise'
+      preLoaderRoute: typeof AppAnaliseRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/auditoria': {
+      id: '/_app/auditoria'
+      path: '/auditoria'
+      fullPath: '/auditoria'
+      preLoaderRoute: typeof AppAuditoriaRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/configuracoes': {
+      id: '/_app/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppLayoutRoute
     }
-    '/_auth/password-recovery': {
-      id: '/_auth/password-recovery'
-      path: '/password-recovery'
-      fullPath: '/password-recovery'
-      preLoaderRoute: typeof AuthPasswordRecoveryRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthLayoutRoute
     }
-    '/_auth/sign-in': {
-      id: '/_auth/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof AuthSignInRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_auth/recuperar-senha': {
+      id: '/_auth/recuperar-senha'
+      path: '/recuperar-senha'
+      fullPath: '/recuperar-senha'
+      preLoaderRoute: typeof AuthRecuperarSenhaRouteImport
+      parentRoute: typeof AuthLayoutRoute
     }
-    '/_auth/sign-up': {
-      id: '/_auth/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof AuthSignUpRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_auth/solicitar-acesso': {
+      id: '/_auth/solicitar-acesso'
+      path: '/solicitar-acesso'
+      fullPath: '/solicitar-acesso'
+      preLoaderRoute: typeof AuthSolicitarAcessoRouteImport
+      parentRoute: typeof AuthLayoutRoute
+    }
+    '/_app/embarques/': {
+      id: '/_app/embarques/'
+      path: '/embarques'
+      fullPath: '/embarques/'
+      preLoaderRoute: typeof AppEmbarquesIndexRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/embarques/$shipmentId': {
+      id: '/_app/embarques/$shipmentId'
+      path: '/embarques/$shipmentId'
+      fullPath: '/embarques/$shipmentId'
+      preLoaderRoute: typeof AppEmbarquesShipmentIdRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/embarques/novo': {
+      id: '/_app/embarques/novo'
+      path: '/embarques/novo'
+      fullPath: '/embarques/novo'
+      preLoaderRoute: typeof AppEmbarquesNovoRouteImport
+      parentRoute: typeof AppLayoutRoute
     }
   }
 }
 
+interface AppLayoutRouteChildren {
+  AppAlertasRoute: typeof AppAlertasRoute
+  AppAnaliseRoute: typeof AppAnaliseRoute
+  AppAuditoriaRoute: typeof AppAuditoriaRoute
+  AppConfiguracoesRoute: typeof AppConfiguracoesRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppEmbarquesShipmentIdRoute: typeof AppEmbarquesShipmentIdRoute
+  AppEmbarquesNovoRoute: typeof AppEmbarquesNovoRoute
+  AppEmbarquesIndexRoute: typeof AppEmbarquesIndexRoute
+}
+
+const AppLayoutRouteChildren: AppLayoutRouteChildren = {
+  AppAlertasRoute: AppAlertasRoute,
+  AppAnaliseRoute: AppAnaliseRoute,
+  AppAuditoriaRoute: AppAuditoriaRoute,
+  AppConfiguracoesRoute: AppConfiguracoesRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppEmbarquesShipmentIdRoute: AppEmbarquesShipmentIdRoute,
+  AppEmbarquesNovoRoute: AppEmbarquesNovoRoute,
+  AppEmbarquesIndexRoute: AppEmbarquesIndexRoute,
+}
+
+const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
+  AppLayoutRouteChildren,
+)
+
+interface AuthLayoutRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRecuperarSenhaRoute: typeof AuthRecuperarSenhaRoute
+  AuthSolicitarAcessoRoute: typeof AuthSolicitarAcessoRoute
+}
+
+const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthRecuperarSenhaRoute: AuthRecuperarSenhaRoute,
+  AuthSolicitarAcessoRoute: AuthSolicitarAcessoRoute,
+}
+
+const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(
+  AuthLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppDashboardRoute: AppDashboardRoute,
-  AuthPasswordRecoveryRoute: AuthPasswordRecoveryRoute,
-  AuthSignInRoute: AuthSignInRoute,
-  AuthSignUpRoute: AuthSignUpRoute,
+  AppLayoutRoute: AppLayoutRouteWithChildren,
+  AuthLayoutRoute: AuthLayoutRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

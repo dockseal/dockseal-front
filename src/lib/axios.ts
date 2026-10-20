@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import axios, { isAxiosError } from 'axios'
 
 import { refreshSession } from '@/api/auth/refresh-session'
@@ -50,6 +51,42 @@ function endSession() {
 	queryClient.clear()
 }
 
+const reportedErrors = new WeakSet<object>()
+
+// Troca ids numéricos e UUIDs por :id, para agrupar o mesmo endpoint no Sentry.
+function normalizePath(url = '') {
+	return url
+		.split('?')[0]
+		.replace(/\/\d+(?=\/|$)/g, '/:id')
+		.replace(/\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?=\/|$)/gi, '/:id')
+}
+
+function reportApiError(error: unknown) {
+	if (!isAxiosError(error) || reportedErrors.has(error)) return
+	if (error.code === 'ERR_CANCELED') return
+
+	const status = error.response?.status
+	const noResponse = !error.response
+	const serverError = status !== undefined && status >= 500
+
+	// 4xx (senha errada, sem permissão, arquivo inválido) são esperados: não reporta.
+	if (!noResponse && !serverError) return
+
+	reportedErrors.add(error)
+
+	const method = (error.config?.method ?? 'get').toUpperCase()
+	const path = normalizePath(error.config?.url)
+	const isTimeout = error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT'
+	const kind = noResponse ? (isTimeout ? 'timeout' : 'network') : 'server'
+
+	// Só método, caminho e status: nada de corpo, cabeçalhos ou resposta da API.
+	Sentry.captureException(error, {
+		tags: { 'api.kind': kind, 'api.method': method, 'api.status': String(status ?? 'none') },
+		contexts: { api: { method, path, status, code: error.code } },
+		fingerprint: ['api-error', kind, method, path, String(status ?? 'none')],
+	})
+}
+
 api.interceptors.response.use(undefined, async (error: unknown) => {
 	if (!isAxiosError(error) || error.response?.status !== 401 || !error.config) {
 		throw error
@@ -80,4 +117,11 @@ api.interceptors.response.use(undefined, async (error: unknown) => {
 
 		throw error
 	}
+})
+
+// Precisa ficar depois do interceptor de 401: reporta só o que sobrou de erro.
+api.interceptors.response.use(undefined, (error: unknown) => {
+	reportApiError(error)
+
+	throw error
 })

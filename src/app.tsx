@@ -8,7 +8,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { queryClient } from '@/lib/query-client'
 import { routeTree } from '@/route-tree.gen'
 
-const router = createRouter({ routeTree, context: { queryClient }, defaultErrorComponent: RouteError })
+export const router = createRouter({ routeTree, context: { queryClient }, defaultErrorComponent: RouteError })
 
 declare module '@tanstack/react-router' {
 	interface Register {

@@ -1,22 +1,23 @@
 import * as Sentry from '@sentry/react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+
 import { enableMSW } from '@/api/mocks'
-import { App } from '@/app'
+import { App, router } from '@/app'
 import { initSentry } from '@/lib/sentry'
 
 import '@/styles/global.css'
 
-initSentry()
+initSentry(router)
 
 enableMSW().then(() => {
-  createRoot(document.getElementById('root')!, {
-    onUncaughtError: Sentry.reactErrorHandler(),
-    onCaughtError: Sentry.reactErrorHandler(),
-    onRecoverableError: Sentry.reactErrorHandler(),
-  }).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  )
+	createRoot(document.getElementById('root')!, {
+		onUncaughtError: Sentry.reactErrorHandler(),
+		onCaughtError: Sentry.reactErrorHandler(),
+		onRecoverableError: Sentry.reactErrorHandler(),
+	}).render(
+		<StrictMode>
+			<App />
+		</StrictMode>,
+	)
 })

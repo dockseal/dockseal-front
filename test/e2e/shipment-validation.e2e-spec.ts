@@ -3,9 +3,9 @@ import { expect, test } from '@playwright/test'
 import { useMockScenario } from './support/mock-scenario'
 import { seedSession } from './support/session'
 
-const VALIDATED_SHIPMENT = '/embarques/a0000000-0000-4000-8000-000000000002?tab=validacao'
-const EMPTY_SHIPMENT = '/embarques/a0000000-0000-4000-8000-000000000003?tab=validacao'
-const VALIDATIONS_SHIPMENT = '/embarques/a0000000-0000-4000-8000-000000000001?tab=validacao'
+const VALIDATED_SHIPMENT = '/shipments/a0000000-0000-4000-8000-000000000002?tab=validation'
+const EMPTY_SHIPMENT = '/shipments/a0000000-0000-4000-8000-000000000003?tab=validation'
+const VALIDATIONS_SHIPMENT = '/shipments/a0000000-0000-4000-8000-000000000001?tab=validation'
 
 test('validação lenta mostra pendência e depois o resultado divergente', async ({ page }) => {
 	await useMockScenario(page, ['validate-slow'])

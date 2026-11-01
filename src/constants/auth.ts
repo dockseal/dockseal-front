@@ -16,6 +16,7 @@ export const EPermission = {
 	ALERT_READ: 'alert:read',
 	ALERT_MANAGE: 'alert:manage',
 	HISTORY_READ: 'history:read',
+	USER_MANAGE: 'user:manage',
 } as const satisfies Record<string, TPermission>
 
 export const USER_ROLE_LABEL: Record<TUserRole, string> = {
@@ -32,10 +33,11 @@ export const PERMISSION_LABEL: Record<TPermission, string> = {
 	'alert:read': 'Consultar alertas',
 	'alert:manage': 'Tratar alertas',
 	'history:read': 'Consultar histórico',
+	'user:manage': 'Gerenciar usuários',
 }
 
 export const ROLE_PERMISSIONS: Record<TUserRole, TPermission[]> = {
-	OPERADOR: ['shipment:read', 'shipment:write', 'document:upload', 'analysis:run', 'alert:read'],
+	OPERADOR: ['shipment:write', 'document:upload', 'alert:read'],
 	GESTOR: ['shipment:read', 'analysis:run', 'alert:read', 'alert:manage', 'history:read'],
 	ADMIN: [
 		'shipment:read',
@@ -45,5 +47,6 @@ export const ROLE_PERMISSIONS: Record<TUserRole, TPermission[]> = {
 		'alert:read',
 		'alert:manage',
 		'history:read',
+		'user:manage',
 	],
 }

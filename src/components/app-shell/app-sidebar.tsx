@@ -4,7 +4,7 @@ import { AppNav } from '@/components/app-shell/app-nav'
 
 export function AppSidebar() {
 	return (
-		<aside className="hidden w-60 shrink-0 flex-col gap-6 border-r bg-sidebar p-4 md:flex">
+		<aside className="hidden h-full w-60 shrink-0 flex-col gap-6 overflow-y-auto border-r bg-sidebar p-4 md:flex">
 			<Link to="/" className="px-3 font-display text-2xl">
 				dockseal
 			</Link>

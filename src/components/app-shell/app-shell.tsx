@@ -9,11 +9,11 @@ interface IAppShellProps {
 
 export function AppShell({ children }: IAppShellProps) {
 	return (
-		<div className="flex min-h-screen w-full">
+		<div className="flex h-dvh w-full overflow-hidden">
 			<AppSidebar />
-			<div className="flex min-w-0 flex-1 flex-col">
+			<div className="flex min-h-0 min-w-0 flex-1 flex-col">
 				<AppHeader />
-				<main className="flex-1 p-4 md:p-8">
+				<main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-8">
 					<div className="mx-auto flex w-full max-w-6xl flex-col gap-6">{children}</div>
 				</main>
 			</div>

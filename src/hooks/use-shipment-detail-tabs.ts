@@ -11,7 +11,7 @@ export function useShipmentDetailTabs(requestedTab: TShipmentDetailTab | undefin
 
 		return !permission || hasPermission(me, permission)
 	})
-	const activeTab = requestedTab && tabs.includes(requestedTab) ? requestedTab : 'resumo'
+	const activeTab = requestedTab && tabs.includes(requestedTab) ? requestedTab : 'summary'
 
 	return { tabs, activeTab }
 }

@@ -17,7 +17,7 @@ export function ShipmentHistory({ shipmentId }: IShipmentHistoryProps) {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<Link to="/auditoria" search={{ shipmentId }} className="self-end text-sm underline underline-offset-4">
+			<Link to="/audit" search={{ shipmentId }} className="self-end text-sm underline underline-offset-4">
 				Abrir na auditoria
 			</Link>
 			<EventsView

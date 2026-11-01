@@ -11,6 +11,9 @@ export const EVENT_STEP_LABEL: Record<string, string> = {
 	ALERT_RESOLVED: 'Alerta resolvido',
 	ALERT_CLOSED: 'Alerta fechado',
 	ALERT_DISMISSED: 'Alerta marcado como falso positivo',
+	USER_CREATED: 'Usuário criado',
+	USER_UPDATED: 'Usuário atualizado',
+	USER_DELETED: 'Usuário excluído',
 }
 
 export const EVENT_STATUS_TONE: Record<string, TTone> = {

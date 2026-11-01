@@ -33,3 +33,29 @@ export function toIsoUtc(datetimeLocal: string | null | undefined) {
 export function startOfTodayUtc(now: Date = new Date()) {
 	return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
 }
+
+export function addYears(date: Date, years: number) {
+	const next = new Date(date.getTime())
+
+	next.setFullYear(next.getFullYear() + years)
+
+	return next
+}
+
+export function toDatetimeLocalInput(date: Date) {
+	const pad = (value: number) => String(value).padStart(2, '0')
+
+	return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+export function shipmentDateInputBounds(now: Date = new Date()) {
+	const earliest = toDatetimeLocalInput(addYears(now, -1))
+	const latest = toDatetimeLocalInput(addYears(now, 1))
+	const current = toDatetimeLocalInput(now)
+
+	return {
+		dispatchedAt: { min: earliest, max: latest },
+		expectedArrival: { min: current, max: latest },
+		expectedReturn: { min: current, max: latest },
+	}
+}

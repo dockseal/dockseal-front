@@ -6,28 +6,30 @@ import { seedSession } from './support/session'
 test('API fora do ar ao carregar a sessão mostra erro em pt-BR', async ({ page }) => {
 	await useMockScenario(page, ['me-network-error'])
 	await seedSession(page, 'OPERADOR')
-	await page.goto('/embarques')
+	await page.goto('/shipments/new')
 	await expect(page.getByText('Não foi possível conectar à API', { exact: false })).toBeVisible()
 	await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible()
 	await expect(page.getByText('Something went wrong')).toHaveCount(0)
 })
 
-test('operador vê o menu sem Auditoria', async ({ page }) => {
+test('operador vê só novo embarque, alertas e configurações', async ({ page }) => {
 	await seedSession(page, 'OPERADOR')
-	await page.goto('/embarques')
+	await page.goto('/shipments/new')
 
 	const nav = page.getByRole('navigation', { name: 'Navegação principal' })
 
-	for (const label of ['Dashboard', 'Embarques', 'Análise rápida', 'Alertas', 'Configurações']) {
+	for (const label of ['Novo embarque', 'Alertas', 'Configurações']) {
 		await expect(nav.getByRole('link', { name: label })).toBeVisible()
 	}
 
-	await expect(nav.getByRole('link', { name: 'Auditoria' })).toHaveCount(0)
+	for (const label of ['Dashboard', 'Embarques', 'Análise rápida', 'Auditoria', 'Usuários']) {
+		await expect(nav.getByRole('link', { name: label })).toHaveCount(0)
+	}
 })
 
 test('gestor vê todo o menu, sem a ação "Novo embarque"', async ({ page }) => {
 	await seedSession(page, 'GESTOR')
-	await page.goto('/embarques')
+	await page.goto('/shipments')
 
 	const nav = page.getByRole('navigation', { name: 'Navegação principal' })
 
@@ -37,17 +39,18 @@ test('gestor vê todo o menu, sem a ação "Novo embarque"', async ({ page }) =>
 
 	await expect(page.getByRole('heading', { name: 'Embarques' })).toBeVisible()
 	await expect(page.getByRole('link', { name: 'Novo embarque' })).toHaveCount(0)
+	await expect(nav.getByRole('link', { name: 'Usuários' })).toHaveCount(0)
 })
 
-test('operador em /auditoria é redirecionado para /embarques', async ({ page }) => {
+test('operador em /audit é redirecionado para /shipments/new', async ({ page }) => {
 	await seedSession(page, 'OPERADOR')
-	await page.goto('/auditoria')
-	await expect(page).toHaveURL(/\/embarques$/)
+	await page.goto('/audit')
+	await expect(page).toHaveURL(/\/shipments\/new$/)
 })
 
-test('gestor em /embarques/novo é redirecionado para /dashboard', async ({ page }) => {
+test('gestor em /shipments/new é redirecionado para /dashboard', async ({ page }) => {
 	await seedSession(page, 'GESTOR')
-	await page.goto('/embarques/novo')
+	await page.goto('/shipments/new')
 	await expect(page).toHaveURL(/\/dashboard$/)
 })
 
@@ -62,7 +65,7 @@ test.describe('mobile', () => {
 		const dialog = page.getByRole('dialog')
 
 		await dialog.getByRole('link', { name: 'Alertas' }).click()
-		await expect(page).toHaveURL(/\/alertas$/)
+		await expect(page).toHaveURL(/\/alerts$/)
 		await expect(page.getByRole('dialog')).toHaveCount(0)
 	})
 

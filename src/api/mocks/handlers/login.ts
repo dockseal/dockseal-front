@@ -2,7 +2,7 @@ import { HttpResponse, http } from 'msw'
 
 import type { ILoginResponse } from '@/@types/auth'
 import { getDb, registerMockEvent } from '@/api/mocks/db'
-import { MOCK_PASSWORD } from '@/api/mocks/fixtures/users'
+import { MOCK_PASSWORD, MOCK_USER_IDS } from '@/api/mocks/fixtures/users'
 import { accessTokenFor, apiUrl, detailResponse, refreshTokenFor } from '@/api/mocks/http'
 
 export const loginHandler = http.post(apiUrl('/auth/login'), async ({ request }) => {
@@ -17,7 +17,8 @@ export const loginHandler = http.post(apiUrl('/auth/login'), async ({ request })
 		)
 	}
 
-	const user = getDb().users.find((candidate) => candidate.email === username)
+	const seededIds = new Set<string>(Object.values(MOCK_USER_IDS))
+	const user = getDb().users.find((candidate) => candidate.email === username && seededIds.has(candidate.id))
 
 	if (!user || password !== MOCK_PASSWORD) {
 		registerMockEvent({ step: 'LOGIN', status: 'FAILURE', user_id: user?.id ?? null, shipment_id: null })

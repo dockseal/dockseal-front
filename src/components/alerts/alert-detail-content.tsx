@@ -18,6 +18,7 @@ interface IAlertDetailContentProps {
 
 export function AlertDetailContent({ alert }: IAlertDetailContentProps) {
 	const canManage = usePermission(EPermission.ALERT_MANAGE)
+	const canReadShipments = usePermission(EPermission.SHIPMENT_READ)
 	const { data: validations } = useShipmentValidations(alert.shipment_id ?? '', {
 		enabled: Boolean(alert.shipment_id),
 	})
@@ -59,11 +60,11 @@ export function AlertDetailContent({ alert }: IAlertDetailContentProps) {
 				</div>
 			)}
 
-			{alert.shipment_id && (
+			{alert.shipment_id && canReadShipments && (
 				<Link
-					to="/embarques/$shipmentId"
+					to="/shipments/$shipmentId"
 					params={{ shipmentId: alert.shipment_id }}
-					search={{ tab: 'validacao' }}
+					search={{ tab: 'validation' }}
 					className="text-sm underline underline-offset-4"
 				>
 					Ver embarque

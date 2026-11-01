@@ -4,6 +4,8 @@ export const LONG_REQUEST_TIMEOUT_MS = 120_000
 
 export const SHIPMENTS_PAGE_SIZE = 20
 
+export const USERS_PAGE_SIZE = 20
+
 export const EVENTS_LIMIT = 100
 
 export const DASHBOARD_RECENT_SHIPMENTS = 5

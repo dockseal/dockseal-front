@@ -29,7 +29,7 @@ export function OpenAlerts() {
 						return (
 							<li key={alert.id} className="flex items-center justify-between gap-3 py-2">
 								<Link
-									to="/alertas"
+									to="/alerts"
 									search={{ alertId: alert.id }}
 									className="line-clamp-2 text-sm underline-offset-4 hover:underline"
 								>

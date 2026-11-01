@@ -13,16 +13,26 @@ import { Route as IndexRouteImport } from './pages/index'
 import { Route as AppLayoutRouteImport } from './pages/_app/layout'
 import { Route as AuthLayoutRouteImport } from './pages/_auth/layout'
 import { Route as AppAlertasRouteImport } from './pages/_app/alertas'
+import { Route as AppAlertsRouteImport } from './pages/_app/alerts'
 import { Route as AppAnaliseRouteImport } from './pages/_app/analise'
+import { Route as AppAnalysisRouteImport } from './pages/_app/analysis'
+import { Route as AppAuditRouteImport } from './pages/_app/audit'
 import { Route as AppAuditoriaRouteImport } from './pages/_app/auditoria'
 import { Route as AppConfiguracoesRouteImport } from './pages/_app/configuracoes'
 import { Route as AppDashboardRouteImport } from './pages/_app/dashboard'
+import { Route as AppSettingsRouteImport } from './pages/_app/settings'
+import { Route as AuthForgotPasswordRouteImport } from './pages/_auth/forgot-password'
 import { Route as AuthLoginRouteImport } from './pages/_auth/login'
 import { Route as AuthRecuperarSenhaRouteImport } from './pages/_auth/recuperar-senha'
+import { Route as AuthRequestAccessRouteImport } from './pages/_auth/request-access'
 import { Route as AuthSolicitarAcessoRouteImport } from './pages/_auth/solicitar-acesso'
 import { Route as AppEmbarquesIndexRouteImport } from './pages/_app/embarques/index'
 import { Route as AppEmbarquesShipmentIdRouteImport } from './pages/_app/embarques/$shipmentId'
 import { Route as AppEmbarquesNovoRouteImport } from './pages/_app/embarques/novo'
+import { Route as AppShipmentsIndexRouteImport } from './pages/_app/shipments/index'
+import { Route as AppShipmentsShipmentIdRouteImport } from './pages/_app/shipments/$shipmentId'
+import { Route as AppShipmentsNewRouteImport } from './pages/_app/shipments/new'
+import { Route as AppUsersIndexRouteImport } from './pages/_app/users/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -42,9 +52,24 @@ const AppAlertasRoute = AppAlertasRouteImport.update({
   path: '/alertas',
   getParentRoute: () => AppLayoutRoute,
 } as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
 const AppAnaliseRoute = AppAnaliseRouteImport.update({
   id: '/analise',
   path: '/analise',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppAnalysisRoute = AppAnalysisRouteImport.update({
+  id: '/analysis',
+  path: '/analysis',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppAuditRoute = AppAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
   getParentRoute: () => AppLayoutRoute,
 } as any)
 const AppAuditoriaRoute = AppAuditoriaRouteImport.update({
@@ -62,6 +87,16 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppLayoutRoute,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -70,6 +105,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
 const AuthRecuperarSenhaRoute = AuthRecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
   path: '/recuperar-senha',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
+const AuthRequestAccessRoute = AuthRequestAccessRouteImport.update({
+  id: '/request-access',
+  path: '/request-access',
   getParentRoute: () => AuthLayoutRoute,
 } as any)
 const AuthSolicitarAcessoRoute = AuthSolicitarAcessoRouteImport.update({
@@ -92,34 +132,74 @@ const AppEmbarquesNovoRoute = AppEmbarquesNovoRouteImport.update({
   path: '/embarques/novo',
   getParentRoute: () => AppLayoutRoute,
 } as any)
+const AppShipmentsIndexRoute = AppShipmentsIndexRouteImport.update({
+  id: '/shipments/',
+  path: '/shipments/',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppShipmentsShipmentIdRoute = AppShipmentsShipmentIdRouteImport.update({
+  id: '/shipments/$shipmentId',
+  path: '/shipments/$shipmentId',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppShipmentsNewRoute = AppShipmentsNewRouteImport.update({
+  id: '/shipments/new',
+  path: '/shipments/new',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
+const AppUsersIndexRoute = AppUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alertas': typeof AppAlertasRoute
+  '/alerts': typeof AppAlertsRoute
   '/analise': typeof AppAnaliseRoute
+  '/analysis': typeof AppAnalysisRoute
+  '/audit': typeof AppAuditRoute
   '/auditoria': typeof AppAuditoriaRoute
   '/configuracoes': typeof AppConfiguracoesRoute
   '/dashboard': typeof AppDashboardRoute
+  '/settings': typeof AppSettingsRoute
+  '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/request-access': typeof AuthRequestAccessRoute
   '/solicitar-acesso': typeof AuthSolicitarAcessoRoute
   '/embarques/$shipmentId': typeof AppEmbarquesShipmentIdRoute
   '/embarques/novo': typeof AppEmbarquesNovoRoute
+  '/shipments/$shipmentId': typeof AppShipmentsShipmentIdRoute
+  '/shipments/new': typeof AppShipmentsNewRoute
   '/embarques/': typeof AppEmbarquesIndexRoute
+  '/shipments/': typeof AppShipmentsIndexRoute
+  '/users/': typeof AppUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alertas': typeof AppAlertasRoute
+  '/alerts': typeof AppAlertsRoute
   '/analise': typeof AppAnaliseRoute
+  '/analysis': typeof AppAnalysisRoute
+  '/audit': typeof AppAuditRoute
   '/auditoria': typeof AppAuditoriaRoute
   '/configuracoes': typeof AppConfiguracoesRoute
   '/dashboard': typeof AppDashboardRoute
+  '/settings': typeof AppSettingsRoute
+  '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/request-access': typeof AuthRequestAccessRoute
   '/solicitar-acesso': typeof AuthSolicitarAcessoRoute
   '/embarques/$shipmentId': typeof AppEmbarquesShipmentIdRoute
   '/embarques/novo': typeof AppEmbarquesNovoRoute
+  '/shipments/$shipmentId': typeof AppShipmentsShipmentIdRoute
+  '/shipments/new': typeof AppShipmentsNewRoute
   '/embarques': typeof AppEmbarquesIndexRoute
+  '/shipments': typeof AppShipmentsIndexRoute
+  '/users': typeof AppUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -127,62 +207,102 @@ export interface FileRoutesById {
   '/_app': typeof AppLayoutRouteWithChildren
   '/_auth': typeof AuthLayoutRouteWithChildren
   '/_app/alertas': typeof AppAlertasRoute
+  '/_app/alerts': typeof AppAlertsRoute
   '/_app/analise': typeof AppAnaliseRoute
+  '/_app/analysis': typeof AppAnalysisRoute
+  '/_app/audit': typeof AppAuditRoute
   '/_app/auditoria': typeof AppAuditoriaRoute
   '/_app/configuracoes': typeof AppConfiguracoesRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/_auth/request-access': typeof AuthRequestAccessRoute
   '/_auth/solicitar-acesso': typeof AuthSolicitarAcessoRoute
   '/_app/embarques/$shipmentId': typeof AppEmbarquesShipmentIdRoute
   '/_app/embarques/novo': typeof AppEmbarquesNovoRoute
+  '/_app/shipments/$shipmentId': typeof AppShipmentsShipmentIdRoute
+  '/_app/shipments/new': typeof AppShipmentsNewRoute
   '/_app/embarques/': typeof AppEmbarquesIndexRoute
+  '/_app/shipments/': typeof AppShipmentsIndexRoute
+  '/_app/users/': typeof AppUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/alertas'
+    | '/alerts'
     | '/analise'
+    | '/analysis'
+    | '/audit'
     | '/auditoria'
     | '/configuracoes'
     | '/dashboard'
+    | '/settings'
+    | '/forgot-password'
     | '/login'
     | '/recuperar-senha'
+    | '/request-access'
     | '/solicitar-acesso'
     | '/embarques/$shipmentId'
     | '/embarques/novo'
+    | '/shipments/$shipmentId'
+    | '/shipments/new'
     | '/embarques/'
+    | '/shipments/'
+    | '/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/alertas'
+    | '/alerts'
     | '/analise'
+    | '/analysis'
+    | '/audit'
     | '/auditoria'
     | '/configuracoes'
     | '/dashboard'
+    | '/settings'
+    | '/forgot-password'
     | '/login'
     | '/recuperar-senha'
+    | '/request-access'
     | '/solicitar-acesso'
     | '/embarques/$shipmentId'
     | '/embarques/novo'
+    | '/shipments/$shipmentId'
+    | '/shipments/new'
     | '/embarques'
+    | '/shipments'
+    | '/users'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/_auth'
     | '/_app/alertas'
+    | '/_app/alerts'
     | '/_app/analise'
+    | '/_app/analysis'
+    | '/_app/audit'
     | '/_app/auditoria'
     | '/_app/configuracoes'
     | '/_app/dashboard'
+    | '/_app/settings'
+    | '/_auth/forgot-password'
     | '/_auth/login'
     | '/_auth/recuperar-senha'
+    | '/_auth/request-access'
     | '/_auth/solicitar-acesso'
     | '/_app/embarques/$shipmentId'
     | '/_app/embarques/novo'
+    | '/_app/shipments/$shipmentId'
+    | '/_app/shipments/new'
     | '/_app/embarques/'
+    | '/_app/shipments/'
+    | '/_app/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -221,11 +341,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAlertasRouteImport
       parentRoute: typeof AppLayoutRoute
     }
+    '/_app/alerts': {
+      id: '/_app/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
     '/_app/analise': {
       id: '/_app/analise'
       path: '/analise'
       fullPath: '/analise'
       preLoaderRoute: typeof AppAnaliseRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/analysis': {
+      id: '/_app/analysis'
+      path: '/analysis'
+      fullPath: '/analysis'
+      preLoaderRoute: typeof AppAnalysisRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/audit': {
+      id: '/_app/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof AppAuditRouteImport
       parentRoute: typeof AppLayoutRoute
     }
     '/_app/auditoria': {
@@ -249,6 +390,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppLayoutRoute
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_auth/forgot-password': {
+      id: '/_auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof AuthLayoutRoute
+    }
     '/_auth/login': {
       id: '/_auth/login'
       path: '/login'
@@ -261,6 +416,13 @@ declare module '@tanstack/react-router' {
       path: '/recuperar-senha'
       fullPath: '/recuperar-senha'
       preLoaderRoute: typeof AuthRecuperarSenhaRouteImport
+      parentRoute: typeof AuthLayoutRoute
+    }
+    '/_auth/request-access': {
+      id: '/_auth/request-access'
+      path: '/request-access'
+      fullPath: '/request-access'
+      preLoaderRoute: typeof AuthRequestAccessRouteImport
       parentRoute: typeof AuthLayoutRoute
     }
     '/_auth/solicitar-acesso': {
@@ -291,29 +453,73 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppEmbarquesNovoRouteImport
       parentRoute: typeof AppLayoutRoute
     }
+    '/_app/shipments/': {
+      id: '/_app/shipments/'
+      path: '/shipments'
+      fullPath: '/shipments/'
+      preLoaderRoute: typeof AppShipmentsIndexRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/shipments/$shipmentId': {
+      id: '/_app/shipments/$shipmentId'
+      path: '/shipments/$shipmentId'
+      fullPath: '/shipments/$shipmentId'
+      preLoaderRoute: typeof AppShipmentsShipmentIdRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/shipments/new': {
+      id: '/_app/shipments/new'
+      path: '/shipments/new'
+      fullPath: '/shipments/new'
+      preLoaderRoute: typeof AppShipmentsNewRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
+    '/_app/users/': {
+      id: '/_app/users/'
+      path: '/users'
+      fullPath: '/users/'
+      preLoaderRoute: typeof AppUsersIndexRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
   }
 }
 
 interface AppLayoutRouteChildren {
   AppAlertasRoute: typeof AppAlertasRoute
+  AppAlertsRoute: typeof AppAlertsRoute
   AppAnaliseRoute: typeof AppAnaliseRoute
+  AppAnalysisRoute: typeof AppAnalysisRoute
+  AppAuditRoute: typeof AppAuditRoute
   AppAuditoriaRoute: typeof AppAuditoriaRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppEmbarquesShipmentIdRoute: typeof AppEmbarquesShipmentIdRoute
   AppEmbarquesNovoRoute: typeof AppEmbarquesNovoRoute
+  AppShipmentsShipmentIdRoute: typeof AppShipmentsShipmentIdRoute
+  AppShipmentsNewRoute: typeof AppShipmentsNewRoute
   AppEmbarquesIndexRoute: typeof AppEmbarquesIndexRoute
+  AppShipmentsIndexRoute: typeof AppShipmentsIndexRoute
+  AppUsersIndexRoute: typeof AppUsersIndexRoute
 }
 
 const AppLayoutRouteChildren: AppLayoutRouteChildren = {
   AppAlertasRoute: AppAlertasRoute,
+  AppAlertsRoute: AppAlertsRoute,
   AppAnaliseRoute: AppAnaliseRoute,
+  AppAnalysisRoute: AppAnalysisRoute,
+  AppAuditRoute: AppAuditRoute,
   AppAuditoriaRoute: AppAuditoriaRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppEmbarquesShipmentIdRoute: AppEmbarquesShipmentIdRoute,
   AppEmbarquesNovoRoute: AppEmbarquesNovoRoute,
+  AppShipmentsShipmentIdRoute: AppShipmentsShipmentIdRoute,
+  AppShipmentsNewRoute: AppShipmentsNewRoute,
   AppEmbarquesIndexRoute: AppEmbarquesIndexRoute,
+  AppShipmentsIndexRoute: AppShipmentsIndexRoute,
+  AppUsersIndexRoute: AppUsersIndexRoute,
 }
 
 const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
@@ -321,14 +527,18 @@ const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
 )
 
 interface AuthLayoutRouteChildren {
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRecuperarSenhaRoute: typeof AuthRecuperarSenhaRoute
+  AuthRequestAccessRoute: typeof AuthRequestAccessRoute
   AuthSolicitarAcessoRoute: typeof AuthSolicitarAcessoRoute
 }
 
 const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRecuperarSenhaRoute: AuthRecuperarSenhaRoute,
+  AuthRequestAccessRoute: AuthRequestAccessRoute,
   AuthSolicitarAcessoRoute: AuthSolicitarAcessoRoute,
 }
 

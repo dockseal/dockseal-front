@@ -4,7 +4,7 @@ import { pngFile, sizedFile, textFile } from './support/files'
 import { useMockScenario } from './support/mock-scenario'
 import { seedSession } from './support/session'
 
-const DOCUMENTS_TAB = '/embarques/a0000000-0000-4000-8000-000000000003?tab=documentos'
+const DOCUMENTS_TAB = '/shipments/a0000000-0000-4000-8000-000000000003?tab=documents'
 
 async function chooseType(page: Page, fileName: string, typeLabel: string) {
 	await page.getByRole('combobox', { name: `Tipo de ${fileName}` }).click()
@@ -82,7 +82,7 @@ for (const [scenario, detail] of [
 
 test('gestor não vê o envio de documentos', async ({ page }) => {
 	await seedSession(page, 'GESTOR')
-	await page.goto('/embarques/a0000000-0000-4000-8000-000000000001?tab=documentos')
+	await page.goto('/shipments/a0000000-0000-4000-8000-000000000001?tab=documents')
 	await expect(page.getByRole('row').filter({ hasText: 'bill_of_lading.pdf' })).toBeVisible()
 	await expect(page.getByLabel('Selecione ou arraste arquivos')).toHaveCount(0)
 })

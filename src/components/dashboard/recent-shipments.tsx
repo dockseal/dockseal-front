@@ -31,7 +31,7 @@ export function RecentShipments() {
 						<li key={shipment.id} className="flex items-center justify-between gap-3 py-2">
 							<div className="flex flex-col">
 								<Link
-									to="/embarques/$shipmentId"
+									to="/shipments/$shipmentId"
 									params={{ shipmentId: shipment.id }}
 									className="font-medium underline-offset-4 hover:underline"
 								>

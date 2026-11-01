@@ -9,29 +9,29 @@ function bodyRows(page: import('@playwright/test').Page) {
 
 test.describe('lista de embarques', () => {
 	test('pagina de 20 em 20', async ({ page }) => {
-		await seedSession(page, 'OPERADOR')
-		await page.goto('/embarques')
+		await seedSession(page, 'GESTOR')
+		await page.goto('/shipments')
 		await expect(bodyRows(page)).toHaveCount(20)
 		await expect(page.getByText('Página 1')).toBeVisible()
 		await page.getByRole('button', { name: 'Próxima' }).click()
-		await expect(page).toHaveURL(/\/embarques\?page=2$/)
+		await expect(page).toHaveURL(/\/shipments\?page=2$/)
 		await expect(bodyRows(page)).toHaveCount(5)
 		await expect(page.getByRole('button', { name: 'Próxima' })).toBeDisabled()
 		await expect(page.getByRole('button', { name: 'Anterior' })).toBeEnabled()
 	})
 
-	test('lista vazia mostra o estado vazio e a ação para operador', async ({ page }) => {
+	test('lista vazia mostra o estado vazio e a ação para admin', async ({ page }) => {
 		await useMockScenario(page, ['shipments-empty'])
-		await seedSession(page, 'OPERADOR')
-		await page.goto('/embarques')
+		await seedSession(page, 'ADMIN')
+		await page.goto('/shipments')
 		await expect(page.getByText('Nenhum embarque registrado.')).toBeVisible()
 		await expect(page.getByRole('link', { name: 'Novo embarque' }).first()).toBeVisible()
 	})
 
 	test('erro de rede mostra o erro e permite tentar de novo', async ({ page }) => {
 		await useMockScenario(page, ['network-error'])
-		await seedSession(page, 'OPERADOR')
-		await page.goto('/embarques')
+		await seedSession(page, 'GESTOR')
+		await page.goto('/shipments')
 		await expect(page.getByText('Não foi possível conectar à API.', { exact: false })).toBeVisible({ timeout: 15000 })
 
 		const reload = page.waitForRequest((request) => request.url().includes('/shipments?'))
@@ -41,8 +41,8 @@ test.describe('lista de embarques', () => {
 	})
 
 	test('datas aparecem em pt-BR', async ({ page }) => {
-		await seedSession(page, 'OPERADOR')
-		await page.goto('/embarques')
+		await seedSession(page, 'GESTOR')
+		await page.goto('/shipments')
 		await expect(bodyRows(page).first()).toContainText('20/11/2026')
 		await expect(bodyRows(page).first()).toContainText('MSCU 123456-7')
 	})
@@ -51,13 +51,13 @@ test.describe('lista de embarques', () => {
 test.describe('novo embarque', () => {
 	test('criação redireciona ao detalhe', async ({ page }) => {
 		await seedSession(page, 'OPERADOR')
-		await page.goto('/embarques/novo')
+		await page.goto('/shipments/new')
 		await page.getByLabel('Origem').fill('Porto de Santos')
 		await page.getByLabel('Destino').fill('Roterdã')
 		await page.getByLabel('Identificador').fill('SHP-E2E-0001')
 		await page.getByRole('button', { name: 'Registrar embarque' }).click()
 		await expect(page.getByText('Embarque registrado.')).toBeVisible()
-		await expect(page).toHaveURL(/\/embarques\/[0-9a-f-]{36}$/)
+		await expect(page).toHaveURL(/\/shipments\/[0-9a-f-]{36}$/)
 		await expect(page.getByRole('heading', { name: 'SHP-E2E-0001' })).toBeVisible()
 	})
 
@@ -69,7 +69,7 @@ test.describe('novo embarque', () => {
 		})
 
 		await seedSession(page, 'OPERADOR')
-		await page.goto('/embarques/novo')
+		await page.goto('/shipments/new')
 		await page.getByLabel('Número do contêiner').fill('MSC123')
 		await page.getByRole('button', { name: 'Registrar embarque' }).click()
 		await expect(page.getByText('Informe a origem.')).toBeVisible()
@@ -81,18 +81,18 @@ test.describe('novo embarque', () => {
 	test('identificador duplicado mostra a mensagem da API', async ({ page }) => {
 		await useMockScenario(page, ['shipment-create-duplicate'])
 		await seedSession(page, 'OPERADOR')
-		await page.goto('/embarques/novo')
+		await page.goto('/shipments/new')
 		await page.getByLabel('Origem').fill('Porto de Santos')
 		await page.getByLabel('Destino').fill('Roterdã')
 		await page.getByRole('button', { name: 'Registrar embarque' }).click()
 		await expect(page.getByText('Identificador de embarque já cadastrado')).toBeVisible()
-		await expect(page).toHaveURL(/\/embarques\/novo$/)
+		await expect(page).toHaveURL(/\/shipments\/new$/)
 	})
 
 	test('chegada no passado mostra a mensagem da API', async ({ page }) => {
 		await useMockScenario(page, ['shipment-create-past-arrival'])
 		await seedSession(page, 'OPERADOR')
-		await page.goto('/embarques/novo')
+		await page.goto('/shipments/new')
 		await page.getByLabel('Origem').fill('Porto de Santos')
 		await page.getByLabel('Destino').fill('Roterdã')
 		await page.getByRole('button', { name: 'Registrar embarque' }).click()
@@ -102,8 +102,8 @@ test.describe('novo embarque', () => {
 
 test('detalhe inexistente mostra "Embarque não encontrado"', async ({ page }) => {
 	await seedSession(page, 'OPERADOR')
-	await page.goto('/embarques/ffffffff-ffff-4fff-8fff-ffffffffffff')
+	await page.goto('/shipments/ffffffff-ffff-4fff-8fff-ffffffffffff')
 	await expect(page.getByText('Embarque não encontrado')).toBeVisible()
-	await page.getByRole('link', { name: 'Voltar para embarques' }).click()
-	await expect(page).toHaveURL(/\/embarques$/)
+	await page.getByRole('main').getByRole('link', { name: 'Novo embarque' }).click()
+	await expect(page).toHaveURL(/\/shipments\/new$/)
 })

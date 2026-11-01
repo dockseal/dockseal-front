@@ -1,13 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { shipmentFormSchema, type TShipmentFormValues } from '@/schemas/shipments/shipment-form.schema'
+import { addYears, toDatetimeLocalInput } from '@/utils/date'
 import { toCreateShipmentInput } from '@/utils/shipment'
-
-function toDatetimeLocal(date: Date) {
-	const pad = (value: number) => String(value).padStart(2, '0')
-
-	return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
-}
 
 function buildValues(overrides: Partial<TShipmentFormValues> = {}): TShipmentFormValues {
 	return {
@@ -58,24 +53,96 @@ describe('shipmentFormSchema', () => {
 	})
 
 	it('rejeita chegada prevista ontem', () => {
-		const yesterday = toDatetimeLocal(new Date('2026-10-13T12:00:00Z'))
+		const yesterday = toDatetimeLocalInput(new Date('2026-10-13T12:00:00Z'))
 
 		expect(messages(buildValues({ expectedArrival: yesterday }))).toContain(
-			'A chegada prevista não pode ser anterior a hoje.',
+			'A chegada prevista não pode ser anterior ao horário atual.',
 		)
 	})
 
-	it('aceita chegada prevista hoje às 00:30 UTC', () => {
-		const today = toDatetimeLocal(new Date('2026-10-14T00:30:00Z'))
+	it('rejeita chegada de hoje às 00:30 quando esse instante é anterior a agora', () => {
+		const today = toDatetimeLocalInput(new Date('2026-10-14T00:30:00Z'))
 
-		expect(messages(buildValues({ expectedArrival: today }))).toEqual([])
+		expect(messages(buildValues({ expectedArrival: today }))).toContain(
+			'A chegada prevista não pode ser anterior ao horário atual.',
+		)
+	})
+
+	it('aceita chegada igual a agora', () => {
+		expect(messages(buildValues({ expectedArrival: toDatetimeLocalInput(new Date()) }))).toEqual([])
+	})
+
+	it('rejeita chegada além de 1 ano', () => {
+		const limit = addYears(new Date(), 1)
+
+		limit.setMinutes(limit.getMinutes() + 1)
+
+		expect(messages(buildValues({ expectedArrival: toDatetimeLocalInput(limit) }))).toContain(
+			'A data deve estar no máximo a 1 ano de hoje.',
+		)
+	})
+
+	it('rejeita despacho anterior a 1 ano', () => {
+		const limit = addYears(new Date(), -1)
+
+		limit.setMinutes(limit.getMinutes() - 1)
+
+		expect(messages(buildValues({ dispatchedAt: toDatetimeLocalInput(limit) }))).toContain(
+			'A data deve estar no máximo a 1 ano de hoje.',
+		)
+	})
+
+	it('rejeita despacho posterior à chegada', () => {
+		const arrival = new Date()
+
+		arrival.setHours(arrival.getHours() + 1)
+
+		const dispatched = new Date(arrival.getTime())
+
+		dispatched.setHours(dispatched.getHours() + 1)
+
+		expect(
+			messages(
+				buildValues({
+					dispatchedAt: toDatetimeLocalInput(dispatched),
+					expectedArrival: toDatetimeLocalInput(arrival),
+				}),
+			),
+		).toContain('A chegada prevista não pode ser anterior ao despacho.')
+	})
+
+	it('rejeita retorno anterior à chegada', () => {
+		const arrival = new Date()
+
+		arrival.setDate(arrival.getDate() + 2)
+
+		const expectedReturn = new Date(arrival.getTime())
+
+		expectedReturn.setDate(expectedReturn.getDate() - 1)
+
+		expect(
+			messages(
+				buildValues({
+					expectedArrival: toDatetimeLocalInput(arrival),
+					expectedReturn: toDatetimeLocalInput(expectedReturn),
+				}),
+			),
+		).toContain('O retorno previsto não pode ser anterior à chegada prevista.')
+	})
+
+	it('rejeita ano ilegível', () => {
+		expect(messages(buildValues({ dispatchedAt: '99999999-01-01T00:00' }))).toContain('Informe uma data válida.')
+	})
+
+	it('aceita os três campos de data vazios', () => {
+		expect(messages(buildValues())).toEqual([])
 	})
 
 	it('rejeita retorno antes do despacho', () => {
 		const result = messages(
 			buildValues({
-				dispatchedAt: toDatetimeLocal(new Date('2026-10-20T10:00:00Z')),
-				expectedReturn: toDatetimeLocal(new Date('2026-10-19T10:00:00Z')),
+				dispatchedAt: toDatetimeLocalInput(new Date('2026-10-20T10:00:00Z')),
+				expectedReturn: toDatetimeLocalInput(new Date('2026-10-19T10:00:00Z')),
 			}),
 		)
 

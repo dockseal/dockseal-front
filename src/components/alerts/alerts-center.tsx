@@ -20,7 +20,7 @@ interface IAlertsCenterProps {
 }
 
 export function AlertsCenter({ status, severity, alertId }: IAlertsCenterProps) {
-	const navigate = useNavigate({ from: '/alertas' })
+	const navigate = useNavigate({ from: '/alerts' })
 
 	const {
 		data: alerts,

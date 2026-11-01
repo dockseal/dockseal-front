@@ -41,16 +41,29 @@ export const SHIPMENT_FORM_FIELD_BY_API_FIELD: Record<string, keyof TShipmentFor
 	owner: 'containerOwner',
 }
 
-export const SHIPMENT_DETAIL_TABS = ['resumo', 'conteineres', 'documentos', 'validacao', 'historico'] as const
+export const SHIPMENT_DETAIL_TABS = ['summary', 'containers', 'documents', 'validation', 'history'] as const
 
 export const SHIPMENT_DETAIL_TAB_LABEL: Record<TShipmentDetailTab, string> = {
-	resumo: 'Resumo',
-	conteineres: 'Contêineres',
-	documentos: 'Documentos',
-	validacao: 'Validação',
-	historico: 'Histórico',
+	summary: 'Resumo',
+	containers: 'Contêineres',
+	documents: 'Documentos',
+	validation: 'Validação',
+	history: 'Histórico',
 }
 
 export const SHIPMENT_DETAIL_TAB_PERMISSION: Partial<Record<TShipmentDetailTab, TPermission>> = {
-	historico: 'history:read',
+	history: 'history:read',
+}
+
+export const SHIPMENT_DETAIL_TAB_FROM_LEGACY: Record<string, TShipmentDetailTab> = {
+	resumo: 'summary',
+	conteineres: 'containers',
+	documentos: 'documents',
+	validacao: 'validation',
+	historico: 'history',
+	summary: 'summary',
+	containers: 'containers',
+	documents: 'documents',
+	validation: 'validation',
+	history: 'history',
 }

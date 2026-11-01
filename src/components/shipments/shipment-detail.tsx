@@ -8,7 +8,9 @@ import { StatusBadge } from '@/components/feedback/status-badge'
 import { PageHeader } from '@/components/page-header'
 import { ShipmentDetailTabs } from '@/components/shipments/shipment-detail-tabs'
 import { Button } from '@/components/ui/button'
+import { EPermission } from '@/constants/auth'
 import { SHIPMENT_STATUS_LABEL, SHIPMENT_STATUS_TONE } from '@/constants/shipment'
+import { usePermission } from '@/hooks/use-permission'
 import { useShipment } from '@/queries/shipments'
 import { getApiErrorMessage, getApiErrorStatus } from '@/utils/api-error'
 import { getShipmentLabel } from '@/utils/shipment'
@@ -20,11 +22,13 @@ interface IShipmentDetailProps {
 }
 
 function BackToShipmentsLink() {
+	const canReadShipments = usePermission(EPermission.SHIPMENT_READ)
+
 	return (
 		<Button asChild variant="outline" size="sm">
-			<Link to="/embarques">
+			<Link to={canReadShipments ? '/shipments' : '/shipments/new'}>
 				<ArrowLeft />
-				Voltar para embarques
+				{canReadShipments ? 'Voltar para embarques' : 'Novo embarque'}
 			</Link>
 		</Button>
 	)

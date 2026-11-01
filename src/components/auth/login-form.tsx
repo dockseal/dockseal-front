@@ -63,7 +63,7 @@ export function LoginForm() {
 						<div className="flex items-center justify-between">
 							<FieldLabel htmlFor="password">Senha</FieldLabel>
 							<Button asChild variant="link" className="h-auto p-0">
-								<Link to="/recuperar-senha">Esqueceu a senha?</Link>
+								<Link to="/forgot-password">Esqueceu a senha?</Link>
 							</Button>
 						</div>
 						<InputGroup>
@@ -95,7 +95,7 @@ export function LoginForm() {
 							Entrar
 						</Button>
 						<Button asChild variant="outline" className="w-full">
-							<Link to="/solicitar-acesso">Solicitar acesso</Link>
+							<Link to="/request-access">Solicitar acesso</Link>
 						</Button>
 					</Field>
 				</FieldGroup>

@@ -35,7 +35,7 @@ test('lista 5 embarques recentes com link', async ({ page }) => {
 
 	await expect(recent.getByRole('link')).toHaveCount(5)
 	await recent.getByRole('link', { name: 'SHP-2026-0001' }).click()
-	await expect(page).toHaveURL(/\/embarques\/a0000000-0000-4000-8000-000000000001$/)
+	await expect(page).toHaveURL(/\/shipments\/a0000000-0000-4000-8000-000000000001$/)
 })
 
 test('alertas abertos levam ao detalhe na central', async ({ page }) => {
@@ -46,6 +46,6 @@ test('alertas abertos levam ao detalhe na central', async ({ page }) => {
 
 	await expect(openAlerts.getByRole('link')).toHaveCount(3)
 	await openAlerts.getByRole('link').first().click()
-	await expect(page).toHaveURL(/\/alertas\?alertId=e0000000-0000-4000-8000-000000000003$/)
+	await expect(page).toHaveURL(/\/alerts\?alertId=e0000000-0000-4000-8000-000000000003$/)
 	await expect(page.getByRole('dialog')).toBeVisible()
 })

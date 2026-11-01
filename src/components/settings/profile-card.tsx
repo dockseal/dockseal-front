@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PERMISSION_LABEL, USER_ROLE_LABEL } from '@/constants/auth'
 import { useLogout } from '@/hooks/use-logout'
+import { effectivePermissions } from '@/utils/permission'
 
 interface IProfileCardProps {
 	user: IUser
@@ -42,7 +43,7 @@ export function ProfileCard({ user }: IProfileCardProps) {
 				<div className="flex flex-col gap-2">
 					<span className="text-xs text-muted-foreground">Permissões</span>
 					<ul className="flex flex-wrap gap-2">
-						{user.permissions.map((permission) => (
+						{effectivePermissions(user).map((permission) => (
 							<li key={permission}>
 								<Badge variant="secondary">{PERMISSION_LABEL[permission] ?? permission}</Badge>
 							</li>

@@ -5,13 +5,13 @@ import { useMockScenario } from './support/mock-scenario'
 import { seedSession } from './support/session'
 
 async function analyze(page: Page, names: string[]) {
-	await page.goto('/analise')
+	await page.goto('/analysis')
 	await page.getByLabel('Selecione ou arraste arquivos').setInputFiles(names.map((name) => textFile(name)))
 	await page.getByRole('button', { name: 'Analisar documentos' }).click()
 }
 
 test('resultado divergente mostra ocorrências, correção, ausentes e conferidos', async ({ page }) => {
-	await seedSession(page, 'OPERADOR')
+	await seedSession(page, 'GESTOR')
 	await analyze(page, ['bl.txt', 'nf.txt'])
 	await expect(page.getByText('Divergente', { exact: true })).toBeVisible()
 	await expect(page.getByText('Confiança: 95%')).toBeVisible()
@@ -31,7 +31,7 @@ test('resultado divergente mostra ocorrências, correção, ausentes e conferido
 
 test('resultado conforme', async ({ page }) => {
 	await useMockScenario(page, ['analysis-conforme'])
-	await seedSession(page, 'OPERADOR')
+	await seedSession(page, 'GESTOR')
 	await analyze(page, ['bl.txt'])
 	await expect(page.getByText('Conforme', { exact: true })).toBeVisible()
 	await expect(page.getByText('Os documentos estão coerentes entre si.')).toBeVisible()
@@ -48,14 +48,14 @@ test('resultado inconclusivo', async ({ page }) => {
 
 test('formato recusado mostra o detail 415', async ({ page }) => {
 	await useMockScenario(page, ['analysis-415'])
-	await seedSession(page, 'OPERADOR')
+	await seedSession(page, 'GESTOR')
 	await analyze(page, ['bl.txt'])
 	await expect(page.getByText("Formato de 'bl.txt' não é suportado")).toBeVisible()
 })
 
 test('falha da IA mostra a mensagem de 502', async ({ page }) => {
 	await useMockScenario(page, ['analysis-502'])
-	await seedSession(page, 'OPERADOR')
+	await seedSession(page, 'GESTOR')
 	await analyze(page, ['bl.txt'])
 	await expect(page.getByText('Não foi possível analisar agora. Tente novamente em instantes.')).toBeVisible()
 })
@@ -67,8 +67,8 @@ test('11 arquivos são bloqueados no cliente', async ({ page }) => {
 		if (request.method() === 'POST' && request.url().endsWith('/analysis')) posts++
 	})
 
-	await seedSession(page, 'OPERADOR')
-	await page.goto('/analise')
+	await seedSession(page, 'GESTOR')
+	await page.goto('/analysis')
 	await page
 		.getByLabel('Selecione ou arraste arquivos')
 		.setInputFiles(Array.from({ length: 11 }, (_, index) => textFile(`doc-${index}.txt`)))
@@ -78,7 +78,7 @@ test('11 arquivos são bloqueados no cliente', async ({ page }) => {
 })
 
 test('mostra estado pendente durante a análise', async ({ page }) => {
-	await seedSession(page, 'OPERADOR')
+	await seedSession(page, 'GESTOR')
 	await analyze(page, ['bl.txt'])
 	await expect(page.getByRole('status').filter({ hasText: 'Analisando documentos com IA.' })).toBeVisible()
 	await expect(page.getByText('Divergente', { exact: true })).toBeVisible()

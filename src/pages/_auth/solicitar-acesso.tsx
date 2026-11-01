@@ -1,17 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-
-import { AuthNotice } from '@/components/auth/auth-notice'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth/solicitar-acesso')({
-	head: () => ({ meta: [{ title: 'Solicitar acesso | Dockseal' }] }),
-	component: RequestAccessPage,
+	beforeLoad: () => {
+		throw redirect({ to: '/request-access' })
+	},
 })
-
-function RequestAccessPage() {
-	return (
-		<AuthNotice
-			title="Solicitar acesso"
-			message="O acesso à Dockseal é liberado pela equipe responsável. Solicite seu cadastro ao administrador da plataforma."
-		/>
-	)
-}

@@ -37,7 +37,7 @@ export function UserMenu() {
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem asChild>
-					<Link to="/configuracoes">
+					<Link to="/settings">
 						<Settings />
 						Configurações
 					</Link>

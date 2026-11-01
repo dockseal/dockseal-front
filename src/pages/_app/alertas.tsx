@@ -1,9 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { z } from 'zod'
-
-import { AlertsCenter } from '@/components/alerts/alerts-center'
-import { EPermission } from '@/constants/auth'
-import { requireRoutePermission } from '@/utils/permission'
 
 const alertsSearchSchema = z.object({
 	status: z.enum(['OPEN', 'RESOLVED', 'CLOSED', 'DISMISSED']).optional().catch(undefined),
@@ -13,13 +9,7 @@ const alertsSearchSchema = z.object({
 
 export const Route = createFileRoute('/_app/alertas')({
 	validateSearch: alertsSearchSchema,
-	beforeLoad: ({ context }) => requireRoutePermission(context.queryClient, EPermission.ALERT_READ),
-	head: () => ({ meta: [{ title: 'Central de alertas | Dockseal' }] }),
-	component: AlertsPage,
+	beforeLoad: ({ search }) => {
+		throw redirect({ to: '/alerts', search })
+	},
 })
-
-function AlertsPage() {
-	const { status, severity, alertId } = Route.useSearch()
-
-	return <AlertsCenter status={status} severity={severity} alertId={alertId} />
-}

@@ -10,6 +10,7 @@ import { SHIPMENT_FORM_FIELD_BY_API_FIELD } from '@/constants/shipment'
 import { useCreateShipment } from '@/mutations/shipments/create-shipment'
 import { shipmentFormSchema, type TShipmentFormValues } from '@/schemas/shipments/shipment-form.schema'
 import { getApiFieldErrors } from '@/utils/api-error'
+import { shipmentDateInputBounds } from '@/utils/date'
 import { toCreateShipmentInput } from '@/utils/shipment'
 
 const DEFAULT_VALUES: TShipmentFormValues = {
@@ -41,7 +42,7 @@ export function ShipmentForm() {
 
 	const { mutateAsync: createShipmentFn, isPending: isCreatingShipment } = useCreateShipment({
 		onSuccess: (shipment) => {
-			navigate({ to: '/embarques/$shipmentId', params: { shipmentId: shipment.id } })
+			navigate({ to: '/shipments/$shipmentId', params: { shipmentId: shipment.id } })
 		},
 		onError: (error) => {
 			for (const [apiField, message] of Object.entries(getApiFieldErrors(error))) {
@@ -55,6 +56,8 @@ export function ShipmentForm() {
 	async function handleShipmentSubmit(data: TShipmentFormValues) {
 		await createShipmentFn(toCreateShipmentInput(data)).catch(() => undefined)
 	}
+
+	const dateBounds = shipmentDateInputBounds()
 
 	return (
 		<form noValidate onSubmit={handleSubmit(handleShipmentSubmit)} className="flex flex-col gap-6">
@@ -95,6 +98,8 @@ export function ShipmentForm() {
 						id="dispatchedAt"
 						type="datetime-local"
 						label="Despacho"
+						min={dateBounds.dispatchedAt.min}
+						max={dateBounds.dispatchedAt.max}
 						error={errors.dispatchedAt?.message}
 						{...register('dispatchedAt')}
 					/>
@@ -102,6 +107,8 @@ export function ShipmentForm() {
 						id="expectedArrival"
 						type="datetime-local"
 						label="Chegada prevista"
+						min={dateBounds.expectedArrival.min}
+						max={dateBounds.expectedArrival.max}
 						error={errors.expectedArrival?.message}
 						{...register('expectedArrival')}
 					/>
@@ -109,6 +116,8 @@ export function ShipmentForm() {
 						id="expectedReturn"
 						type="datetime-local"
 						label="Retorno previsto"
+						min={dateBounds.expectedReturn.min}
+						max={dateBounds.expectedReturn.max}
 						error={errors.expectedReturn?.message}
 						{...register('expectedReturn')}
 					/>
@@ -152,7 +161,7 @@ export function ShipmentForm() {
 
 			<div className="flex justify-end gap-2">
 				<Button asChild type="button" variant="outline">
-					<Link to="/embarques">Cancelar</Link>
+					<Link to="/shipments">Cancelar</Link>
 				</Button>
 				<Button type="submit" disabled={isCreatingShipment}>
 					{isCreatingShipment && <LoaderPinwheelIcon className="size-4 animate-spin" />}

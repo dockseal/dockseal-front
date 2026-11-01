@@ -45,7 +45,7 @@ export function AlertsTable({ alerts, onOpenDetails }: IAlertsTableProps) {
 								<TableCell>
 									{alert.shipment_id ? (
 										<Link
-											to="/embarques/$shipmentId"
+											to="/shipments/$shipmentId"
 											params={{ shipmentId: alert.shipment_id }}
 											className="font-mono underline-offset-4 hover:underline"
 										>

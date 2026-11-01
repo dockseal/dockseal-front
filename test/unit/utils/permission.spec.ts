@@ -17,10 +17,21 @@ function buildUser(role: TUserRole): IUser {
 }
 
 describe('hasPermission', () => {
-	it('operador registra embarques mas não consulta histórico', () => {
+	it('operador registra embarques mas não consulta a lista, a análise nem o histórico', () => {
 		expect(hasPermission(buildUser('OPERADOR'), 'shipment:write')).toBe(true)
+		expect(hasPermission(buildUser('OPERADOR'), 'shipment:read')).toBe(false)
+		expect(hasPermission(buildUser('OPERADOR'), 'analysis:run')).toBe(false)
 		expect(hasPermission(buildUser('OPERADOR'), 'history:read')).toBe(false)
 		expect(hasPermission(buildUser('OPERADOR'), 'alert:manage')).toBe(false)
+	})
+
+	it('ignora permissão da API que o perfil não tem', () => {
+		const operator = buildUser('OPERADOR')
+
+		operator.permissions = [...operator.permissions, 'shipment:read']
+
+		expect(hasPermission(operator, 'shipment:read')).toBe(false)
+		expect(hasPermission(operator, 'shipment:write')).toBe(true)
 	})
 
 	it('gestor trata alertas mas não registra embarques', () => {
@@ -29,7 +40,9 @@ describe('hasPermission', () => {
 		expect(hasPermission(buildUser('GESTOR'), 'document:upload')).toBe(false)
 	})
 
-	it('admin tem todas as permissões', () => {
+	it('admin tem todas as permissões, inclusive gerenciar usuários', () => {
+		expect(ROLE_PERMISSIONS.ADMIN).toContain('user:manage')
+
 		for (const permission of ROLE_PERMISSIONS.ADMIN) {
 			expect(hasPermission(buildUser('ADMIN'), permission)).toBe(true)
 		}
@@ -42,7 +55,7 @@ describe('hasPermission', () => {
 
 describe('getLandingPath', () => {
 	it('direciona por perfil', () => {
-		expect(getLandingPath('OPERADOR')).toBe('/embarques')
+		expect(getLandingPath('OPERADOR')).toBe('/shipments/new')
 		expect(getLandingPath('GESTOR')).toBe('/dashboard')
 		expect(getLandingPath('ADMIN')).toBe('/dashboard')
 	})

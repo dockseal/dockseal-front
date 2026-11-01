@@ -25,7 +25,7 @@ export function AuditLog({ shipmentId }: IAuditLogProps) {
 					<span>
 						Filtrando pelo embarque <span className="font-mono">{shipmentId.slice(0, 8)}</span>
 					</span>
-					<Link to="/auditoria" search={{}} className="underline underline-offset-4">
+					<Link to="/audit" search={{}} className="underline underline-offset-4">
 						Limpar filtro
 					</Link>
 				</div>

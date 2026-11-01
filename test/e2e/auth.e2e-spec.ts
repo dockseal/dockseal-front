@@ -4,9 +4,9 @@ import { useMockScenario } from './support/mock-scenario'
 import { AUTH_STORAGE_KEY, loginAs, MOCK_EMAIL, seedSession } from './support/session'
 
 test.describe('login', () => {
-	test('operador vai para /embarques', async ({ page }) => {
+	test('operador vai para /shipments/new', async ({ page }) => {
 		await loginAs(page, 'OPERADOR')
-		await expect(page).toHaveURL(/\/embarques$/)
+		await expect(page).toHaveURL(/\/shipments\/new$/)
 	})
 
 	test('gestor vai para /dashboard', async ({ page }) => {
@@ -56,11 +56,11 @@ test.describe('login', () => {
 	test('links de recuperação e solicitação de acesso', async ({ page }) => {
 		await page.goto('/login')
 		await page.getByRole('link', { name: 'Esqueceu a senha?' }).click()
-		await expect(page).toHaveURL(/\/recuperar-senha$/)
+		await expect(page).toHaveURL(/\/forgot-password$/)
 		await expect(page.getByText('A recuperação de senha é feita pelo administrador da plataforma.')).toBeVisible()
 		await page.getByRole('link', { name: 'Voltar para o login' }).click()
 		await page.getByRole('link', { name: 'Solicitar acesso' }).click()
-		await expect(page).toHaveURL(/\/solicitar-acesso$/)
+		await expect(page).toHaveURL(/\/request-access$/)
 		await expect(page.getByText('O acesso à Dockseal é liberado pela equipe responsável.')).toBeVisible()
 	})
 })

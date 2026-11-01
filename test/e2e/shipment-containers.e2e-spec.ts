@@ -3,8 +3,8 @@ import { expect, test } from '@playwright/test'
 import { useMockScenario } from './support/mock-scenario'
 import { seedSession } from './support/session'
 
-const WITHOUT_CONTAINER = '/embarques/a0000000-0000-4000-8000-000000000003?tab=conteineres'
-const WITH_CONTAINER = '/embarques/a0000000-0000-4000-8000-000000000001?tab=conteineres'
+const WITHOUT_CONTAINER = '/shipments/a0000000-0000-4000-8000-000000000003?tab=containers'
+const WITH_CONTAINER = '/shipments/a0000000-0000-4000-8000-000000000001?tab=containers'
 
 test('define o contêiner principal em embarque sem contêiner', async ({ page }) => {
 	await seedSession(page, 'OPERADOR')

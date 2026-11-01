@@ -1,5 +1,11 @@
-import type { IUser, TUserRole } from '@/@types/auth'
+import type { IUser, TPermission, TUserRole } from '@/@types/auth'
 import { ROLE_PERMISSIONS } from '@/constants/auth'
+
+const API_ROLE_PERMISSIONS: Record<TUserRole, TPermission[]> = {
+	OPERADOR: ['shipment:write', 'shipment:read', 'document:upload', 'analysis:run', 'alert:read'],
+	GESTOR: ROLE_PERMISSIONS.GESTOR,
+	ADMIN: ROLE_PERMISSIONS.ADMIN,
+}
 
 export const MOCK_PASSWORD = 'Senha@123'
 
@@ -16,7 +22,7 @@ function buildUser(role: TUserRole, name: string, email: string): IUser {
 		email,
 		status: 'ACTIVE',
 		role: { name: role },
-		permissions: ROLE_PERMISSIONS[role],
+		permissions: API_ROLE_PERMISSIONS[role],
 	}
 }
 

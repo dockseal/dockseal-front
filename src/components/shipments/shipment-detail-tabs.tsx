@@ -22,9 +22,9 @@ export function ShipmentDetailTabs({ shipment, tab, tabs }: IShipmentDetailTabsP
 		const nextTab = value as TShipmentDetailTab
 
 		navigate({
-			to: '/embarques/$shipmentId',
+			to: '/shipments/$shipmentId',
 			params: { shipmentId: shipment.id },
-			search: { tab: nextTab === 'resumo' ? undefined : nextTab },
+			search: { tab: nextTab === 'summary' ? undefined : nextTab },
 		})
 	}
 
@@ -37,20 +37,20 @@ export function ShipmentDetailTabs({ shipment, tab, tabs }: IShipmentDetailTabsP
 					</TabsTrigger>
 				))}
 			</TabsList>
-			<TabsContent value="resumo">
+			<TabsContent value="summary">
 				<ShipmentSummary shipment={shipment} />
 			</TabsContent>
-			<TabsContent value="conteineres">
+			<TabsContent value="containers">
 				<ShipmentContainers shipment={shipment} />
 			</TabsContent>
-			<TabsContent value="documentos">
+			<TabsContent value="documents">
 				<ShipmentDocuments shipment={shipment} />
 			</TabsContent>
-			<TabsContent value="validacao">
+			<TabsContent value="validation">
 				<ShipmentValidationPanel shipmentId={shipment.id} />
 			</TabsContent>
-			{tabs.includes('historico') && (
-				<TabsContent value="historico">
+			{tabs.includes('history') && (
+				<TabsContent value="history">
 					<ShipmentHistory shipmentId={shipment.id} />
 				</TabsContent>
 			)}

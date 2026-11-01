@@ -1,9 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { z } from 'zod'
-
-import { ShipmentsList } from '@/components/shipments/shipments-list'
-import { EPermission } from '@/constants/auth'
-import { requireRoutePermission } from '@/utils/permission'
 
 const shipmentsSearchSchema = z.object({
 	page: z.number().int().min(1).optional().catch(undefined),
@@ -11,13 +7,7 @@ const shipmentsSearchSchema = z.object({
 
 export const Route = createFileRoute('/_app/embarques/')({
 	validateSearch: shipmentsSearchSchema,
-	beforeLoad: ({ context }) => requireRoutePermission(context.queryClient, EPermission.SHIPMENT_READ),
-	head: () => ({ meta: [{ title: 'Embarques | Dockseal' }] }),
-	component: ShipmentsPage,
+	beforeLoad: ({ search }) => {
+		throw redirect({ to: '/shipments', search })
+	},
 })
-
-function ShipmentsPage() {
-	const { page } = Route.useSearch()
-
-	return <ShipmentsList page={page ?? 1} />
-}

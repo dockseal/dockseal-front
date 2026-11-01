@@ -1,5 +1,7 @@
 export type TUserRole = 'OPERADOR' | 'GESTOR' | 'ADMIN'
 
+export type TUserStatus = 'ACTIVE' | 'INACTIVE'
+
 export type TPermission =
 	| 'shipment:read'
 	| 'shipment:write'
@@ -8,6 +10,7 @@ export type TPermission =
 	| 'alert:read'
 	| 'alert:manage'
 	| 'history:read'
+	| 'user:manage'
 
 export interface ILoginInput {
 	username: string
@@ -42,7 +45,27 @@ export interface IUser {
 	id: string
 	name: string
 	email: string
-	status: string
+	status: TUserStatus
 	role: IRole
 	permissions: TPermission[]
+}
+
+export interface IGetUsersFilters {
+	limit: number
+	offset: number
+}
+
+export interface ICreateUserInput {
+	name: string
+	email: string
+	password: string
+	role: TUserRole
+}
+
+export interface IUpdateUserInput {
+	name?: string
+	email?: string
+	role?: TUserRole
+	status?: TUserStatus
+	password?: string
 }

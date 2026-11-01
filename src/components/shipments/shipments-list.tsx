@@ -22,7 +22,7 @@ interface IShipmentsListProps {
 function NewShipmentButton() {
 	return (
 		<Button asChild>
-			<Link to="/embarques/novo">
+			<Link to="/shipments/new">
 				<Plus />
 				Novo embarque
 			</Link>
@@ -44,7 +44,7 @@ export function ShipmentsList({ page }: IShipmentsListProps) {
 	} = useShipments(filters)
 
 	function handlePageChange(nextPage: number) {
-		navigate({ to: '/embarques', search: { page: nextPage > 1 ? nextPage : undefined } })
+		navigate({ to: '/shipments', search: { page: nextPage > 1 ? nextPage : undefined } })
 	}
 
 	return (

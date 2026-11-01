@@ -7,7 +7,7 @@ const SHIPMENT_ID = 'a0000000-0000-4000-8000-000000000001'
 
 test('gestor vê a linha do tempo em pt-BR', async ({ page }) => {
 	await seedSession(page, 'GESTOR')
-	await page.goto('/auditoria')
+	await page.goto('/audit')
 	await expect(page.getByRole('heading', { name: 'Auditoria' })).toBeVisible()
 
 	const timeline = page.getByRole('list', { name: 'Linha do tempo' })
@@ -23,7 +23,7 @@ test('gestor vê a linha do tempo em pt-BR', async ({ page }) => {
 
 test('?shipmentId= filtra os eventos do embarque', async ({ page }) => {
 	await seedSession(page, 'GESTOR')
-	await page.goto(`/auditoria?shipmentId=${SHIPMENT_ID}`)
+	await page.goto(`/audit?shipmentId=${SHIPMENT_ID}`)
 
 	const timeline = page.getByRole('list', { name: 'Linha do tempo' })
 
@@ -36,21 +36,21 @@ test('?shipmentId= filtra os eventos do embarque', async ({ page }) => {
 test('lista vazia', async ({ page }) => {
 	await useMockScenario(page, ['events-empty'])
 	await seedSession(page, 'GESTOR')
-	await page.goto('/auditoria')
+	await page.goto('/audit')
 	await expect(page.getByText('Nenhum registro encontrado.')).toBeVisible()
 })
 
 test('aba Histórico do embarque aparece para gestor', async ({ page }) => {
 	await seedSession(page, 'GESTOR')
-	await page.goto(`/embarques/${SHIPMENT_ID}`)
+	await page.goto(`/shipments/${SHIPMENT_ID}`)
 	await page.getByRole('tab', { name: 'Histórico' }).click()
-	await expect(page).toHaveURL(/tab=historico/)
+	await expect(page).toHaveURL(/tab=history/)
 	await expect(page.getByRole('list', { name: 'Linha do tempo' }).getByRole('listitem')).toHaveCount(5)
 })
 
 test('aba Histórico some para operador', async ({ page }) => {
 	await seedSession(page, 'OPERADOR')
-	await page.goto(`/embarques/${SHIPMENT_ID}?tab=historico`)
+	await page.goto(`/shipments/${SHIPMENT_ID}?tab=history`)
 	await expect(page.getByRole('tab', { name: 'Resumo' })).toHaveAttribute('aria-selected', 'true')
 	await expect(page.getByRole('tab', { name: 'Histórico' })).toHaveCount(0)
 })

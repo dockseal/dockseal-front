@@ -2,7 +2,7 @@ import type { IEvidence, IShipmentDocument } from '@/@types/document'
 
 export type TShipmentStatus = 'REGISTERED' | 'VALIDATED' | 'PENDING_REVIEW'
 
-export type TShipmentDetailTab = 'resumo' | 'conteineres' | 'documentos' | 'validacao' | 'historico'
+export type TShipmentDetailTab = 'summary' | 'containers' | 'documents' | 'validation' | 'history'
 
 export interface IContainerInput {
 	container_number: string

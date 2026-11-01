@@ -1,17 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-
-import { AuthNotice } from '@/components/auth/auth-notice'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth/recuperar-senha')({
-	head: () => ({ meta: [{ title: 'Recuperar senha | Dockseal' }] }),
-	component: PasswordRecoveryPage,
+	beforeLoad: () => {
+		throw redirect({ to: '/forgot-password' })
+	},
 })
-
-function PasswordRecoveryPage() {
-	return (
-		<AuthNotice
-			title="Recuperar senha"
-			message="A recuperação de senha é feita pelo administrador da plataforma. Entre em contato para redefinir sua senha."
-		/>
-	)
-}

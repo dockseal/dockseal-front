@@ -32,7 +32,7 @@ export function ShipmentsTable({ shipments }: IShipmentsTableProps) {
 						<TableRow key={shipment.id}>
 							<TableCell className="font-medium">
 								<Link
-									to="/embarques/$shipmentId"
+									to="/shipments/$shipmentId"
 									params={{ shipmentId: shipment.id }}
 									className="underline-offset-4 hover:underline"
 								>

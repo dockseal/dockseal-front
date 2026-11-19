@@ -1,4 +1,4 @@
-import { BadgeCheck, Clock, Warehouse } from 'lucide-react'
+import { BadgeCheck } from 'lucide-react'
 
 import { DashboardPanel } from '@/components/dashboard/dashboard-panel'
 import { KpiCard } from '@/components/dashboard/kpi-card'
@@ -12,7 +12,7 @@ import { EPermission } from '@/constants/auth'
 import { usePermission } from '@/hooks/use-permission'
 import { useDashboardMetrics } from '@/queries/dashboard'
 import { getApiErrorMessage } from '@/utils/api-error'
-import { formatHours, formatPercentValue } from '@/utils/number'
+import { formatPercentValue } from '@/utils/number'
 
 export function DashboardOverview() {
 	const canReadAlerts = usePermission(EPermission.ALERT_READ)
@@ -31,18 +31,6 @@ export function DashboardOverview() {
 			{metrics && (
 				<>
 					<div className="grid gap-4 md:grid-cols-3">
-						<KpiCard
-							title="Embarques no pátio"
-							value={String(metrics.shipments_in_yard)}
-							hint="Registrados ou em revisão"
-							icon={Warehouse}
-						/>
-						<KpiCard
-							title="Tempo médio em trânsito"
-							value={formatHours(metrics.average_transit_hours)}
-							hint="Da chegada à saída"
-							icon={Clock}
-						/>
 						<KpiCard
 							title="Eficiência de validação"
 							value={formatPercentValue(metrics.efficiency_percent)}

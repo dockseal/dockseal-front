@@ -13,7 +13,6 @@ export const getDashboardMetricsHandler = http.get(apiUrl('/dashboard/metrics'),
 	const metrics = buildMetrics()
 
 	if (hasScenario('metrics-null')) {
-		metrics.average_transit_hours = null
 		metrics.efficiency_percent = null
 	}
 

@@ -21,6 +21,9 @@ export function initSentry(router: AnyRouter) {
 		dsn,
 		environment: import.meta.env.VITE_SENTRY_ENVIRONMENT || 'local',
 		release: import.meta.env.VITE_SENTRY_RELEASE || undefined,
+		// Envia os eventos pelo proprio site (/monitoring), para bloqueadores de anuncio nao barrarem.
+		// Fica desligado no pnpm dev, que nao roda as funcoes da Cloudflare.
+		tunnel: import.meta.env.VITE_SENTRY_TUNNEL || undefined,
 
 		integrations: [Sentry.tanstackRouterBrowserTracingIntegration(router)],
 		tracesSampleRate: parseSampleRate(import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE, 1),

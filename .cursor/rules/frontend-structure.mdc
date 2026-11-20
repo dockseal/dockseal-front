@@ -8,7 +8,7 @@ alwaysApply: true
 
 - Official `src` folders: `components`, `components/ui`, `pages`, `api`, `api/mocks`, `queries`, `mutations`, `hooks`, `utils`, `stores`, `schemas`, `constants`, `lib`, `assets` and `@types`.
 - `src/env.ts` holds environment validation/configuration and stays inside `src`.
-- Tests live in the root `test` folder, never inside `src`.
+- Tests live in the root `test` folder, never inside `src`. Unit tests are `*.spec.ts`. End-to-end tests are `*.e2e-spec.ts`.
 - `src/pages` contains TanStack Router file routes only; keep route files thin.
 - `src/components` contains reusable application components with UI logic only.
 - `src/components/ui` contains only shadcn/ui primitives. Do not place business components there and avoid modifying these files.

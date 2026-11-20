@@ -8,11 +8,10 @@ alwaysApply: true
 - This document overrides legacy code and any conflicting older frontend convention.
 - Existing code is not an architecture reference: when touching legacy code, keep behavior and move the touched code toward the official architecture.
 - Official stack: React, Vite, TypeScript, TanStack Router, TanStack Query, TanStack Devtools, React Hook Form, Zod, Zustand, Axios, Tailwind CSS v4, shadcn/ui, sonner, GSAP, Motion, Lenis, next-themes, and Biome.
-- Tests use Vitest, Playwright, Testing Library, and MSW.
+- Tests use Vitest, Playwright, Testing Library, and MSW. They live in the root `test` folder, never inside `src`. Unit tests are `*.spec.ts`. End-to-end tests are `*.e2e-spec.ts`.
 - Backend: local FastAPI app at `http://localhost:8000` (`VITE_API_URL`), OpenAPI contract at `/openapi.json`. Every request, mock, and API type follows that contract (see `backend-api-contract.mdc`).
 - Official `src` folders: `components`, `components/ui`, `pages`, `api`, `api/mocks`, `queries`, `mutations`, `hooks`, `utils`, `stores`, `schemas`, `constants`, `lib`, `assets`, and `@types`.
 - `src/env.ts` holds environment validation/configuration and stays inside `src`.
-- Tests live in the root `test` folder, never inside `src`.
 - Global constants use `ALWAYS_UPPERCASE`; enum-like objects use the `E` prefix and `as const`.
 - Mocks live in `src/api/mocks`, with `index.ts` wiring the MSW worker, one handler per request, on the same routes as the real API when it exists.
 - Pages in `src/pages` stay thin; UI lives in `src/components` (kebab-case, one component per file, named exports).

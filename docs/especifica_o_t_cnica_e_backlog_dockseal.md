@@ -163,7 +163,7 @@ Este documento define a arquitetura técnica, padrões de desenvolvimento e o ba
 #### Story 5.1: Como Gestor, quero visualizar o Dashboard com a volumetria e métricas do terminal.
 *   **Fluxo de Navegação (Front)**: `/dashboard` (Tela principal ao logar como Gestor - Imagem 8).
 *   **Tarefas (Tasks)**:
-    *   **[FRONT]** Implementar cards de KPIs (Embarques no pátio, Tempo médio em trânsito, Eficiência %).
+    *   **[FRONT]** Implementar card de KPI (Eficiência %).
     *   **[FRONT]** Implementar gráfico de "Tendências de Volume" (usar lib como Recharts ou Chart.js).
     *   **[BACK]** Criar endpoint `GET /api/v1/dashboard/metrics`.
     *   **[BACK]** O endpoint deve realizar agregações no banco (`COUNT`, `AVG`) e cachear no Redis por 5 minutos para evitar sobrecarga no banco de dados.

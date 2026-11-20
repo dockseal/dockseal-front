@@ -43,4 +43,7 @@ node_modules/.tmp/
 
 # Coverage reports
 coverage/
+
+# Capturas locais do TCC (prints de reteste). Não versionar.
+/docs/capturas-testes/
 *.lco

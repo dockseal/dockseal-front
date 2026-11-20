@@ -29,6 +29,10 @@ export function ShipmentAlertFilter({ shipmentId, onShipmentChange }: IShipmentA
 		isFetching,
 		isError,
 	} = useShipments({ limit: ALERT_SHIPMENT_SEARCH_LIMIT, offset: 0, search }, search.length > 0)
+	const visibleShipments = (shipments ?? []).filter((shipment) =>
+		shipment.shipment_id_custom?.trim().toLocaleLowerCase().startsWith(search.toLocaleLowerCase()),
+	)
+	const showLoading = isFetching && visibleShipments.length === 0
 	const selectedLabel = selectedShipment ? shipmentIdentifier(selectedShipment) : ''
 	const inputValue = isEditing ? query : selectedLabel
 	const isOpen = isEditing && search.length > 0
@@ -92,14 +96,14 @@ export function ShipmentAlertFilter({ shipmentId, onShipmentChange }: IShipmentA
 				</div>
 			</PopoverAnchor>
 			<PopoverContent className="max-h-80 overflow-y-auto p-1" onOpenAutoFocus={(event) => event.preventDefault()}>
-				{isFetching && !shipments && <p className="px-2 py-1.5 text-sm text-muted-foreground">Buscando embarques...</p>}
+				{showLoading && <p className="px-2 py-1.5 text-sm text-muted-foreground">Buscando embarques...</p>}
 				{isError && <p className="px-2 py-1.5 text-sm text-muted-foreground">Não foi possível buscar embarques.</p>}
-				{!isError && shipments && shipments.length === 0 && (
+				{!isError && !showLoading && visibleShipments.length === 0 && (
 					<p className="px-2 py-1.5 text-sm text-muted-foreground">Nenhum embarque encontrado.</p>
 				)}
-				{!isError && shipments && shipments.length > 0 && (
+				{!isError && visibleShipments.length > 0 && (
 					<div role="listbox" aria-label="Embarques">
-						{shipments.map((shipment) => (
+						{visibleShipments.map((shipment) => (
 							<button
 								key={shipment.id}
 								type="button"

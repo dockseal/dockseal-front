@@ -39,6 +39,26 @@ test('envia dois arquivos com tipos diferentes e lista os documentos', async ({ 
 	await expect(page.getByText('Nenhum documento enviado.')).toHaveCount(0)
 })
 
+test('remove o arquivo enviado e bloqueia um arquivo vazio no lugar', async ({ page }) => {
+	await seedSession(page, 'OPERADOR')
+	await page.goto(DOCUMENTS_TAB)
+	await page.getByLabel('Selecione ou arraste arquivos').setInputFiles([textFile('bl.txt')])
+	await chooseType(page, 'bl.txt', 'Bill of Lading')
+	await page.getByRole('button', { name: 'Enviar documentos' }).click()
+	await expect(page.getByRole('row').filter({ hasText: 'bl.txt' })).toBeVisible()
+
+	await page.getByRole('button', { name: 'Remover bl.txt' }).click()
+	await page.getByRole('button', { name: 'Remover arquivo' }).click()
+	await expect(page.getByText('Arquivo removido.')).toBeVisible()
+	await expect(page.getByText('Nenhum documento enviado.')).toBeVisible()
+
+	await page.getByLabel('Selecione ou arraste arquivos').setInputFiles([
+		{ name: 'vazio.txt', mimeType: 'text/plain', buffer: Buffer.alloc(0) },
+	])
+	await expect(page.getByText('vazio.txt: arquivo vazio.')).toBeVisible()
+	await expect(page.getByRole('button', { name: 'Enviar documentos' })).toBeDisabled()
+})
+
 test('foto do contêiner aparece nas evidências', async ({ page }) => {
 	await seedSession(page, 'OPERADOR')
 	await page.goto(DOCUMENTS_TAB)
@@ -84,5 +104,6 @@ test('gestor não vê o envio de documentos', async ({ page }) => {
 	await seedSession(page, 'GESTOR')
 	await page.goto('/shipments/a0000000-0000-4000-8000-000000000001?tab=documents')
 	await expect(page.getByRole('row').filter({ hasText: 'bill_of_lading.pdf' })).toBeVisible()
+	await expect(page.getByRole('button', { name: 'Remover bill_of_lading.pdf' })).toHaveCount(0)
 	await expect(page.getByLabel('Selecione ou arraste arquivos')).toHaveCount(0)
 })

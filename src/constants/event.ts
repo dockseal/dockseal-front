@@ -5,6 +5,8 @@ export const EVENT_STEP_LABEL: Record<string, string> = {
 	SHIPMENT_CREATED: 'Embarque registrado',
 	CONTAINER_ASSOCIATED: 'Contêiner associado',
 	DOCUMENTS_UPLOADED: 'Documentos enviados',
+	DOCUMENT_DELETED: 'Documento removido',
+	EVIDENCE_DELETED: 'Evidência removida',
 	VALIDATION: 'Validação do embarque',
 	ANALYSIS: 'Análise de documentos avulsos',
 	ALERT_OPEN: 'Alerta reaberto',

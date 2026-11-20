@@ -20,7 +20,7 @@ export const getShipmentsHandler = http.get(apiUrl('/shipments'), ({ request }) 
 	const search = url.searchParams.get('search')?.trim().toLocaleLowerCase()
 	const shipments = [...getDb().shipments]
 		.sort((a, b) => b.created_at.localeCompare(a.created_at))
-		.filter((shipment) => !search || shipment.shipment_id_custom?.toLocaleLowerCase().includes(search))
+		.filter((shipment) => !search || shipment.shipment_id_custom?.toLocaleLowerCase().startsWith(search))
 
 	return HttpResponse.json<IShipment[]>(shipments.slice(offset, offset + limit))
 })

@@ -2,15 +2,17 @@ import { Images } from 'lucide-react'
 
 import type { IEvidence } from '@/@types/document'
 import { EmptyState } from '@/components/feedback/empty-state'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { EVIDENCE_TYPE_LABEL } from '@/constants/document'
 import { formatDateTime } from '@/utils/date'
 
 interface IShipmentEvidencesProps {
 	evidences: IEvidence[]
+	onRemove?: (evidence: IEvidence) => void
 }
 
-export function ShipmentEvidences({ evidences }: IShipmentEvidencesProps) {
+export function ShipmentEvidences({ evidences, onRemove }: IShipmentEvidencesProps) {
 	return (
 		<Card>
 			<CardHeader>
@@ -39,6 +41,18 @@ export function ShipmentEvidences({ evidences }: IShipmentEvidencesProps) {
 									)}
 									<span className="text-sm font-medium">{label}</span>
 									<span className="text-xs text-muted-foreground">{formatDateTime(evidence.created_at)}</span>
+									{onRemove && (
+										<Button
+											type="button"
+											variant="destructive"
+											size="sm"
+											className="self-start"
+											aria-label={`Remover ${label}`}
+											onClick={() => onRemove(evidence)}
+										>
+											Remover
+										</Button>
+									)}
 								</li>
 							)
 						})}

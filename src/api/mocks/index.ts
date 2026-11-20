@@ -4,6 +4,7 @@ import { addShipmentContainerHandler } from '@/api/mocks/handlers/add-shipment-c
 import { analyzeDocumentsHandler } from '@/api/mocks/handlers/analyze-documents'
 import { createShipmentHandler } from '@/api/mocks/handlers/create-shipment'
 import { createUserHandler } from '@/api/mocks/handlers/create-user'
+import { deleteShipmentDocumentHandler, deleteShipmentEvidenceHandler } from '@/api/mocks/handlers/delete-shipment-file'
 import { deleteUserHandler } from '@/api/mocks/handlers/delete-user'
 import { getAlertsHandler } from '@/api/mocks/handlers/get-alerts'
 import { getDashboardMetricsHandler } from '@/api/mocks/handlers/get-dashboard-metrics'
@@ -33,6 +34,8 @@ export const worker = setupWorker(
 	setShipmentContainerHandler,
 	addShipmentContainerHandler,
 	uploadShipmentDocumentsHandler,
+	deleteShipmentDocumentHandler,
+	deleteShipmentEvidenceHandler,
 	validateShipmentHandler,
 	getShipmentValidationsHandler,
 	getShipmentEventsHandler,

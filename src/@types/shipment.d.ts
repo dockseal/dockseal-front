@@ -55,4 +55,5 @@ export interface IShipmentDetail extends IShipment {
 export interface IGetShipmentsFilters {
 	limit: number
 	offset: number
+	search?: string
 }

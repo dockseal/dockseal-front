@@ -43,6 +43,10 @@ export const ALERT_STATUSES: TAlertStatus[] = ['OPEN', 'RESOLVED', 'CLOSED', 'DI
 
 export const ALERT_RESOLUTION_NOTE_MAX_LENGTH = 2000
 
+export const ALERT_SHIPMENT_SEARCH_DEBOUNCE_MS = 300
+
+export const ALERT_SHIPMENT_SEARCH_LIMIT = 8
+
 export const ALERT_ACTIONS: { status: TAlertStatus; label: string }[] = [
 	{ status: 'RESOLVED', label: 'Marcar como resolvido' },
 	{ status: 'DISMISSED', label: 'Falso positivo' },

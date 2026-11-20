@@ -1,5 +1,6 @@
 import type { TAlertStatus } from '@/@types/alert'
 import type { TSeverity } from '@/@types/analysis'
+import { ShipmentAlertFilter } from '@/components/alerts/shipment-alert-filter'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ALERT_STATUS_LABEL, ALERT_STATUSES, SEVERITY_LABEL, SEVERITY_ORDER } from '@/constants/alert'
 
@@ -8,11 +9,20 @@ const ALL_OPTION = 'all'
 interface IAlertsFiltersProps {
 	status?: TAlertStatus
 	severity?: TSeverity
+	shipmentId?: string
 	onStatusChange: (status: TAlertStatus | undefined) => void
 	onSeverityChange: (severity: TSeverity | undefined) => void
+	onShipmentChange: (shipmentId: string | undefined) => void
 }
 
-export function AlertsFilters({ status, severity, onStatusChange, onSeverityChange }: IAlertsFiltersProps) {
+export function AlertsFilters({
+	status,
+	severity,
+	shipmentId,
+	onStatusChange,
+	onSeverityChange,
+	onShipmentChange,
+}: IAlertsFiltersProps) {
 	function handleStatusChange(value: string) {
 		onStatusChange(value === ALL_OPTION ? undefined : (value as TAlertStatus))
 	}
@@ -22,7 +32,8 @@ export function AlertsFilters({ status, severity, onStatusChange, onSeverityChan
 	}
 
 	return (
-		<div className="flex flex-wrap gap-3">
+		<div className="flex flex-wrap items-center gap-3">
+			<ShipmentAlertFilter shipmentId={shipmentId} onShipmentChange={onShipmentChange} />
 			<Select value={status ?? ALL_OPTION} onValueChange={handleStatusChange}>
 				<SelectTrigger className="w-48" aria-label="Status">
 					<SelectValue />

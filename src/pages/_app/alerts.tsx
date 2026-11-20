@@ -8,6 +8,7 @@ import { requireRoutePermission } from '@/utils/permission'
 const alertsSearchSchema = z.object({
 	status: z.enum(['OPEN', 'RESOLVED', 'CLOSED', 'DISMISSED']).optional().catch(undefined),
 	severity: z.enum(['BAIXA', 'MEDIA', 'ALTA', 'CRITICA']).optional().catch(undefined),
+	shipmentId: z.uuid().optional().catch(undefined),
 	alertId: z.uuid().optional().catch(undefined),
 })
 
@@ -19,7 +20,7 @@ export const Route = createFileRoute('/_app/alerts')({
 })
 
 function AlertsPage() {
-	const { status, severity, alertId } = Route.useSearch()
+	const { status, severity, shipmentId, alertId } = Route.useSearch()
 
-	return <AlertsCenter status={status} severity={severity} alertId={alertId} />
+	return <AlertsCenter status={status} severity={severity} shipmentId={shipmentId} alertId={alertId} />
 }

@@ -16,10 +16,11 @@ import { getApiErrorMessage } from '@/utils/api-error'
 interface IAlertsCenterProps {
 	status?: TAlertStatus
 	severity?: TSeverity
+	shipmentId?: string
 	alertId?: string
 }
 
-export function AlertsCenter({ status, severity, alertId }: IAlertsCenterProps) {
+export function AlertsCenter({ status, severity, shipmentId, alertId }: IAlertsCenterProps) {
 	const navigate = useNavigate({ from: '/alerts' })
 
 	const {
@@ -27,7 +28,7 @@ export function AlertsCenter({ status, severity, alertId }: IAlertsCenterProps) 
 		isLoading: isLoadingAlerts,
 		error: alertsError,
 		refetch: refetchAlerts,
-	} = useAlerts({ status, severity })
+	} = useAlerts({ status, severity, shipment_id: shipmentId })
 	const { data: allAlerts, isLoading: isLoadingAllAlerts } = useAlerts({})
 	const selectedAlert = allAlerts?.find((alert) => alert.id === alertId)
 
@@ -37,6 +38,10 @@ export function AlertsCenter({ status, severity, alertId }: IAlertsCenterProps) 
 
 	function handleSeverityChange(nextSeverity: TSeverity | undefined) {
 		navigate({ search: (previous) => ({ ...previous, severity: nextSeverity }) })
+	}
+
+	function handleShipmentChange(nextShipmentId: string | undefined) {
+		navigate({ search: (previous) => ({ ...previous, shipmentId: nextShipmentId }) })
 	}
 
 	function handleOpenDetails(nextAlertId: string) {
@@ -53,8 +58,10 @@ export function AlertsCenter({ status, severity, alertId }: IAlertsCenterProps) 
 			<AlertsFilters
 				status={status}
 				severity={severity}
+				shipmentId={shipmentId}
 				onStatusChange={handleStatusChange}
 				onSeverityChange={handleSeverityChange}
+				onShipmentChange={handleShipmentChange}
 			/>
 			{isLoadingAlerts && <LoadingState rows={4} />}
 			{alertsError && <ErrorState message={getApiErrorMessage(alertsError)} onRetry={() => refetchAlerts()} />}

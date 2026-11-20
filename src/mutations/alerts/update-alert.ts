@@ -6,6 +6,7 @@ import { updateAlert } from '@/api/alerts/update-alert'
 import { invalidateAlerts, updateAlertsCache } from '@/queries/alerts'
 import { invalidateDashboard } from '@/queries/dashboard'
 import { invalidateEvents } from '@/queries/events'
+import { invalidateShipmentDetail, invalidateShipments } from '@/queries/shipments'
 import { getApiErrorMessage } from '@/utils/api-error'
 
 type TUpdateAlertVariables = Parameters<typeof updateAlert>[0]
@@ -23,6 +24,8 @@ export function useUpdateAlert(options?: TUseUpdateAlertOptions) {
 			invalidateAlerts()
 			invalidateDashboard()
 			invalidateEvents()
+			invalidateShipments()
+			if (data.shipment_id) invalidateShipmentDetail(data.shipment_id)
 			toast.success('Alerta atualizado.')
 			await onSuccess?.(data, variables, onMutateResult, context)
 		},

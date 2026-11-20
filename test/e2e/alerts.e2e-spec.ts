@@ -50,6 +50,34 @@ test('filtros gravam na URL e vão na requisição', async ({ page }) => {
 	await expect(bodyRows(page)).toHaveCount(1)
 })
 
+test('filtra pelo identificador do embarque e mantém o filtro na URL', async ({ page }) => {
+	await seedSession(page, 'GESTOR')
+	await page.goto('/alerts')
+	await expect(bodyRows(page)).toHaveCount(4)
+
+	const shipmentRequest = page.waitForRequest(
+		(candidate) => candidate.url().includes('/shipments?') && candidate.url().includes('search=SHP-2026-0002'),
+	)
+
+	await page.getByRole('combobox', { name: 'Embarque' }).fill('SHP-2026-0002')
+	await shipmentRequest
+	await page.getByRole('option', { name: /SHP-2026-0002/ }).click()
+
+	const shipmentId = 'a0000000-0000-4000-8000-000000000002'
+
+	await expect(page).toHaveURL(new RegExp(`shipmentId=${shipmentId}`))
+	await expect(page.getByText('Nenhum alerta encontrado.')).toBeVisible()
+
+	const alertsRequest = page.waitForRequest(
+		(candidate) => candidate.url().includes('/alerts?') && candidate.url().includes(`shipment_id=${shipmentId}`),
+	)
+
+	await page.reload()
+	await alertsRequest
+	await expect(page.getByRole('combobox', { name: 'Embarque' })).toHaveValue('SHP-2026-0002')
+	await expect(page.getByText('Nenhum alerta encontrado.')).toBeVisible()
+})
+
 test('lista vazia', async ({ page }) => {
 	await useMockScenario(page, ['alerts-empty'])
 	await seedSession(page, 'GESTOR')

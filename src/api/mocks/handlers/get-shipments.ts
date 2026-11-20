@@ -17,7 +17,10 @@ export const getShipmentsHandler = http.get(apiUrl('/shipments'), ({ request }) 
 	const url = new URL(request.url)
 	const limit = Number(url.searchParams.get('limit') ?? 50)
 	const offset = Number(url.searchParams.get('offset') ?? 0)
-	const shipments = [...getDb().shipments].sort((a, b) => b.created_at.localeCompare(a.created_at))
+	const search = url.searchParams.get('search')?.trim().toLocaleLowerCase()
+	const shipments = [...getDb().shipments]
+		.sort((a, b) => b.created_at.localeCompare(a.created_at))
+		.filter((shipment) => !search || shipment.shipment_id_custom?.toLocaleLowerCase().includes(search))
 
 	return HttpResponse.json<IShipment[]>(shipments.slice(offset, offset + limit))
 })

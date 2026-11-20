@@ -12,18 +12,20 @@ export const shipmentsQueryKeys = {
 	detail: (shipmentId: string) => [...shipmentsQueryKeys.all, 'detail', shipmentId] as const,
 }
 
-export function useShipments(filters: IGetShipmentsFilters) {
+export function useShipments(filters: IGetShipmentsFilters, enabled = true) {
 	return useQuery({
 		queryKey: shipmentsQueryKeys.list(filters),
 		queryFn: () => getShipments(filters),
 		placeholderData: keepPreviousData,
+		enabled,
 	})
 }
 
-export function useShipment(shipmentId: string) {
+export function useShipment(shipmentId: string, enabled = true) {
 	return useQuery({
 		queryKey: shipmentsQueryKeys.detail(shipmentId),
 		queryFn: () => getShipment(shipmentId),
+		enabled: enabled && shipmentId.length > 0,
 	})
 }
 

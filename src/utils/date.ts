@@ -2,6 +2,8 @@ const dateTimeFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short',
 
 const dateFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short' })
 
+const DATETIME_LOCAL_PATTERN = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/
+
 const trendDateFormatter = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', timeZone: 'UTC' })
 
 export function formatDateTime(iso: string | null | undefined) {
@@ -20,14 +22,38 @@ export function formatTrendDate(date: string) {
 	return trendDateFormatter.format(new Date(`${date}T00:00:00Z`))
 }
 
+export function parseDatetimeLocal(value: string) {
+	const match = DATETIME_LOCAL_PATTERN.exec(value)
+
+	if (!match) return null
+
+	const [year, month, day, hour, minute] = match.slice(1, 6).map(Number)
+	const second = Number(match[6] ?? 0)
+	const date = new Date(year, month - 1, day, hour, minute, second)
+
+	const isSameCalendarDate =
+		date.getFullYear() === year &&
+		date.getMonth() === month - 1 &&
+		date.getDate() === day &&
+		date.getHours() === hour &&
+		date.getMinutes() === minute &&
+		date.getSeconds() === second
+
+	return isSameCalendarDate ? date : null
+}
+
+export function hasUnreadableDateInput(form: HTMLFormElement, name: string) {
+	const element = form.elements.namedItem(name)
+
+	return element instanceof HTMLInputElement && element.validity.badInput
+}
+
 export function toIsoUtc(datetimeLocal: string | null | undefined) {
 	if (!datetimeLocal) return undefined
 
-	const date = new Date(datetimeLocal)
+	const date = parseDatetimeLocal(datetimeLocal)
 
-	if (Number.isNaN(date.getTime())) return undefined
-
-	return date.toISOString()
+	return date ? date.toISOString() : undefined
 }
 
 export function startOfTodayUtc(now: Date = new Date()) {

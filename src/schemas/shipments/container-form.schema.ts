@@ -4,7 +4,6 @@ import { requiredContainerNumberSchema } from '@/schemas/shipments/container-num
 
 export const containerFormSchema = z.object({
 	containerNumber: requiredContainerNumberSchema,
-	isoCode: z.string().trim().max(10, 'Máximo de 10 caracteres.'),
 	type: z.string().trim().max(50, 'Máximo de 50 caracteres.'),
 	owner: z.string().trim().max(100, 'Máximo de 100 caracteres.'),
 	mode: z.enum(['primary', 'additional']),

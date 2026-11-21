@@ -1,16 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { LoaderPinwheelIcon } from 'lucide-react'
+import type { FormEvent } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { TextField } from '@/components/form/text-field'
+import { ContainerIsoCodeField } from '@/components/shipments/container-iso-code-field'
+import { ContainerNumberField } from '@/components/shipments/container-number-field'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { SHIPMENT_FORM_FIELD_BY_API_FIELD } from '@/constants/shipment'
+import { INVALID_DATE_MESSAGE, SHIPMENT_DATE_FIELDS, SHIPMENT_FORM_FIELD_BY_API_FIELD } from '@/constants/shipment'
 import { useCreateShipment } from '@/mutations/shipments/create-shipment'
 import { shipmentFormSchema, type TShipmentFormValues } from '@/schemas/shipments/shipment-form.schema'
 import { getApiFieldErrors } from '@/utils/api-error'
-import { shipmentDateInputBounds } from '@/utils/date'
+import { hasUnreadableDateInput, shipmentDateInputBounds } from '@/utils/date'
 import { toCreateShipmentInput } from '@/utils/shipment'
 
 const DEFAULT_VALUES: TShipmentFormValues = {
@@ -22,7 +25,6 @@ const DEFAULT_VALUES: TShipmentFormValues = {
 	expectedArrival: '',
 	expectedReturn: '',
 	containerNumber: '',
-	containerIsoCode: '',
 	containerType: '',
 	containerOwner: '',
 }
@@ -34,6 +36,7 @@ export function ShipmentForm() {
 		register,
 		handleSubmit,
 		setError,
+		setFocus,
 		formState: { errors },
 	} = useForm<TShipmentFormValues>({
 		resolver: zodResolver(shipmentFormSchema),
@@ -53,14 +56,28 @@ export function ShipmentForm() {
 		},
 	})
 
-	async function handleShipmentSubmit(data: TShipmentFormValues) {
+	async function handleShipmentSubmit(data: TShipmentFormValues, hasUnreadableDate: boolean) {
+		if (hasUnreadableDate) return
+
 		await createShipmentFn(toCreateShipmentInput(data)).catch(() => undefined)
+	}
+
+	// O datetime-local entrega '' quando a data digitada é incompleta ou inexistente (ex.: 31/11).
+	async function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
+		const form = event.currentTarget
+		const unreadableFields = SHIPMENT_DATE_FIELDS.filter((field) => hasUnreadableDateInput(form, field))
+
+		await handleSubmit((data) => handleShipmentSubmit(data, unreadableFields.length > 0))(event)
+
+		for (const field of unreadableFields) setError(field, { message: INVALID_DATE_MESSAGE })
+
+		if (unreadableFields.length > 0) setFocus(unreadableFields[0])
 	}
 
 	const dateBounds = shipmentDateInputBounds()
 
 	return (
-		<form noValidate onSubmit={handleSubmit(handleShipmentSubmit)} className="flex flex-col gap-6">
+		<form noValidate onSubmit={handleFormSubmit} className="flex flex-col gap-6">
 			<Card>
 				<CardHeader>
 					<CardTitle>Dados do embarque</CardTitle>
@@ -127,23 +144,17 @@ export function ShipmentForm() {
 			<Card>
 				<CardHeader>
 					<CardTitle>Contêiner (opcional)</CardTitle>
-					<CardDescription>Padrão ISO 6346, por exemplo MSCU 123456-7.</CardDescription>
+					<CardDescription>
+						Padrão ISO 6346: 4 letras, 6 números e o dígito verificador, por exemplo MSCU 123456-6.
+					</CardDescription>
 				</CardHeader>
 				<CardContent className="grid gap-4 sm:grid-cols-2">
-					<TextField
+					<ContainerNumberField
 						id="containerNumber"
-						label="Número do contêiner"
-						placeholder="MSCU 123456-7"
 						error={errors.containerNumber?.message}
 						{...register('containerNumber')}
 					/>
-					<TextField
-						id="containerIsoCode"
-						label="Código ISO"
-						placeholder="22G1"
-						error={errors.containerIsoCode?.message}
-						{...register('containerIsoCode')}
-					/>
+					<ContainerIsoCodeField id="containerIsoCode" />
 					<TextField
 						id="containerType"
 						label="Tipo"

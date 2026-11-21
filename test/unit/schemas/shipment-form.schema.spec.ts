@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { shipmentFormSchema, type TShipmentFormValues } from '@/schemas/shipments/shipment-form.schema'
-import { addYears, toDatetimeLocalInput } from '@/utils/date'
+import { addYears, parseDatetimeLocal, toDatetimeLocalInput } from '@/utils/date'
 import { toCreateShipmentInput } from '@/utils/shipment'
 
 function buildValues(overrides: Partial<TShipmentFormValues> = {}): TShipmentFormValues {
@@ -14,7 +14,6 @@ function buildValues(overrides: Partial<TShipmentFormValues> = {}): TShipmentFor
 		expectedArrival: '',
 		expectedReturn: '',
 		containerNumber: '',
-		containerIsoCode: '',
 		containerType: '',
 		containerOwner: '',
 		...overrides,
@@ -156,13 +155,43 @@ describe('shipmentFormSchema', () => {
 	})
 
 	it('aceita contêiner com espaço e hífen', () => {
-		expect(messages(buildValues({ containerNumber: 'mscu 123456-7' }))).toEqual([])
+		expect(messages(buildValues({ containerNumber: 'mscu 123456-6' }))).toEqual([])
+	})
+
+	it('rejeita contêiner com dígito verificador errado e indica o correto', () => {
+		expect(messages(buildValues({ containerNumber: 'MSCU 123456-7' }))).toContain(
+			'Dígito verificador inválido. O correto para MSCU123456 é 6.',
+		)
+	})
+
+	it.each(['2026-11-31T10:00', '2026-02-30T10:00', '2027-02-29T10:00', '2026-13-01T10:00', '2026-04-31T08:00'])(
+		'rejeita data inexistente %s em qualquer campo de data',
+		(value) => {
+			for (const field of ['dispatchedAt', 'expectedArrival', 'expectedReturn'] as const) {
+				expect(messages(buildValues({ [field]: value }))).toContain('Informe uma data válida.')
+			}
+		},
+	)
+
+	it('rejeita hora inexistente', () => {
+		expect(messages(buildValues({ dispatchedAt: '2026-10-14T24:00' }))).toContain('Informe uma data válida.')
+		expect(messages(buildValues({ dispatchedAt: '2026-10-14T10:60' }))).toContain('Informe uma data válida.')
+	})
+
+	it('rejeita data incompleta ou em outro formato', () => {
+		expect(messages(buildValues({ dispatchedAt: '2026-10-14' }))).toContain('Informe uma data válida.')
+		expect(messages(buildValues({ dispatchedAt: '14/10/2026 10:00' }))).toContain('Informe uma data válida.')
+	})
+
+	it('aceita 29/02 só em ano bissexto', () => {
+		expect(parseDatetimeLocal('2028-02-29T10:00')).toBeInstanceOf(Date)
+		expect(parseDatetimeLocal('2027-02-29T10:00')).toBeNull()
 	})
 })
 
 describe('toCreateShipmentInput', () => {
 	it('omite vazios e não envia contêiner sem número', () => {
-		const input = toCreateShipmentInput(buildValues({ containerIsoCode: '22G1' }))
+		const input = toCreateShipmentInput(buildValues({ containerType: 'Dry 20' }))
 
 		expect(input).toEqual({ origin: 'Porto de Santos', destination: 'Roterdã' })
 	})
@@ -172,13 +201,25 @@ describe('toCreateShipmentInput', () => {
 			buildValues({
 				shipmentIdCustom: 'SHP-1',
 				expectedArrival: '2026-11-20T11:00',
-				containerNumber: 'mscu 123456-7',
+				containerNumber: 'mscu 123456-6',
 				containerOwner: 'MSC',
 			}),
 		)
 
 		expect(input.shipment_id_custom).toBe('SHP-1')
 		expect(input.expected_arrival).toMatch(/Z$/)
-		expect(input.container).toEqual({ container_number: 'MSCU1234567', owner: 'MSC' })
+		expect(input.container).toEqual({ container_number: 'MSCU1234566', iso_code: '6346', owner: 'MSC' })
+	})
+
+	it('sempre envia o código ISO 6346 no contêiner', () => {
+		const input = toCreateShipmentInput(buildValues({ containerNumber: 'CSQU3054383' }))
+
+		expect(input.container?.iso_code).toBe('6346')
+	})
+
+	it('não envia data inexistente', () => {
+		const input = toCreateShipmentInput(buildValues({ dispatchedAt: '2026-11-31T10:00' }))
+
+		expect(input.dispatched_at).toBeUndefined()
 	})
 })

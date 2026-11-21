@@ -27,13 +27,13 @@ export function buildDivergentResult(
 			},
 			{
 				field: 'número do contêiner',
-				description: 'O número do contêiner na Nota Fiscal (MSCU7654321) difere do Bill of Lading (MSCU1234567).',
+				description: 'O número do contêiner na Nota Fiscal (MSCU7654329) difere do Bill of Lading (MSCU1234566).',
 				occurrences: [
-					{ document: first, value: 'MSCU1234567', excerpt: 'Container: MSCU1234567' },
-					{ document: second, value: 'MSCU7654321', excerpt: 'Contêiner MSCU7654321' },
+					{ document: first, value: 'MSCU1234566', excerpt: 'Container: MSCU1234566' },
+					{ document: second, value: 'MSCU7654329', excerpt: 'Contêiner MSCU7654329' },
 				],
 				severity: 'CRITICA',
-				suggestion: 'Corrigir o número do contêiner na Nota Fiscal para MSCU1234567.',
+				suggestion: 'Corrigir o número do contêiner na Nota Fiscal para MSCU1234566.',
 				document_to_fix: second,
 				confidence: 1,
 			},

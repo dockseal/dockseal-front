@@ -58,6 +58,15 @@ describe('getApiFieldErrors', () => {
 		expect(getApiFieldErrors(error)).toEqual({ origin: 'Valor inválido', container_number: 'Valor inválido' })
 	})
 
+	it('uses the pt-BR message written by the API validators', () => {
+		const error = buildError(422, {
+			detail: [{ loc: ['body', 'expected_arrival'], msg: 'Value error, Informe uma data válida.', type: 'value_error' }],
+		})
+
+		expect(getApiFieldErrors(error)).toEqual({ expected_arrival: 'Informe uma data válida.' })
+		expect(getApiErrorMessage(error)).toBe('Informe uma data válida.')
+	})
+
 	it('returns an empty map for string detail', () => {
 		expect(getApiFieldErrors(buildError(422, { detail: 'x' }))).toEqual({})
 	})

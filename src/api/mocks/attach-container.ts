@@ -2,7 +2,8 @@ import type { IContainerInput, IShipment } from '@/@types/shipment'
 import { getDb, registerMockEvent } from '@/api/mocks/db'
 import { detailResponse } from '@/api/mocks/http'
 import { hasScenario } from '@/api/mocks/scenario'
-import { isValidContainerNumber, normalizeContainerNumber } from '@/utils/container'
+import { CONTAINER_ISO_CODE } from '@/constants/shipment'
+import { getContainerNumberError, normalizeContainerNumber } from '@/utils/container'
 
 export function attachMockContainer(
 	shipment: IShipment,
@@ -10,9 +11,10 @@ export function attachMockContainer(
 	options: { replacePrimary: boolean; userId: string },
 ) {
 	const containerNumber = normalizeContainerNumber(input.container_number ?? '')
+	const containerNumberError = getContainerNumberError(containerNumber)
 
-	if (!isValidContainerNumber(containerNumber)) {
-		return detailResponse(422, 'Número de contêiner inválido. Use o padrão ISO 6346: 4 letras e 7 números.')
+	if (containerNumberError) {
+		return detailResponse(422, containerNumberError)
 	}
 
 	const db = getDb()
@@ -33,13 +35,14 @@ export function attachMockContainer(
 	const container = existing ?? {
 		id: crypto.randomUUID(),
 		container_number: containerNumber,
-		iso_code: input.iso_code ?? null,
+		iso_code: CONTAINER_ISO_CODE,
 		type: input.type ?? null,
 		owner: input.owner ?? null,
 		status: 'IN_TRANSIT',
 	}
 
 	container.status = 'IN_TRANSIT'
+	container.iso_code = CONTAINER_ISO_CODE
 
 	if (!shipment.containers.some((linked) => linked.container_number === containerNumber)) {
 		shipment.containers = [...shipment.containers, container]

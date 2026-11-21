@@ -14,3 +14,6 @@ export const HTTP_ERROR_MESSAGE = {
 export const API_DETAIL_STATUSES = [401, 403, 404, 413, 415, 422] as const
 
 export const FIELD_ERROR_MESSAGE = 'Valor inválido'
+
+// Prefixo que o Pydantic coloca nas mensagens dos validators da API (já escritas em pt-BR).
+export const API_CUSTOM_MESSAGE_PREFIX = 'Value error, '

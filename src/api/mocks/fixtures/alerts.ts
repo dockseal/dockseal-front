@@ -35,7 +35,7 @@ export function buildAlerts(): IAlert[] {
 			id: 'e0000000-0000-4000-8000-000000000003',
 			severity: 'CRITICA',
 			description:
-				'número do contêiner: O número do contêiner na Nota Fiscal (MSCU7654321) difere do Bill of Lading (MSCU1234567). Sugestão: Corrigir o número do contêiner na Nota Fiscal para MSCU1234567.',
+				'número do contêiner: O número do contêiner na Nota Fiscal (MSCU7654329) difere do Bill of Lading (MSCU1234566). Sugestão: Corrigir o número do contêiner na Nota Fiscal para MSCU1234566.',
 			status: 'OPEN',
 			created_at: '2026-10-10T12:20:02Z',
 			updated_at: '2026-10-10T12:20:02Z',

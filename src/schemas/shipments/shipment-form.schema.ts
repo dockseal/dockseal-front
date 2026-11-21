@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
+import { INVALID_DATE_MESSAGE } from '@/constants/shipment'
 import { optionalContainerNumberSchema } from '@/schemas/shipments/container-number.schema'
-import { addYears } from '@/utils/date'
+import { addYears, parseDatetimeLocal } from '@/utils/date'
 
-const INVALID_DATE_MESSAGE = 'Informe uma data válida.'
 const YEAR_WINDOW_MESSAGE = 'A data deve estar no máximo a 1 ano de hoje.'
 
 function optionalText(max: number) {
@@ -13,9 +13,7 @@ function optionalText(max: number) {
 function parseDate(value: string) {
 	if (!value) return undefined
 
-	const date = new Date(value)
-
-	return Number.isNaN(date.getTime()) ? null : date
+	return parseDatetimeLocal(value)
 }
 
 export const shipmentFormSchema = z
@@ -28,7 +26,6 @@ export const shipmentFormSchema = z
 		expectedArrival: z.string(),
 		expectedReturn: z.string(),
 		containerNumber: optionalContainerNumberSchema,
-		containerIsoCode: optionalText(10),
 		containerType: optionalText(50),
 		containerOwner: optionalText(100),
 	})

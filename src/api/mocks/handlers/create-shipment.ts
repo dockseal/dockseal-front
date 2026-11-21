@@ -5,6 +5,7 @@ import { attachMockContainer } from '@/api/mocks/attach-container'
 import { getDb, registerMockEvent } from '@/api/mocks/db'
 import { apiUrl, authorize, detailResponse } from '@/api/mocks/http'
 import { hasScenario } from '@/api/mocks/scenario'
+import { INVALID_DATE_MESSAGE } from '@/constants/shipment'
 import { startOfTodayUtc } from '@/utils/date'
 
 export const createShipmentHandler = http.post(apiUrl('/shipments'), async ({ request }) => {
@@ -28,8 +29,35 @@ export const createShipmentHandler = http.post(apiUrl('/shipments'), async ({ re
 		)
 	}
 
+	const invalidDateFields = (['dispatched_at', 'expected_arrival', 'expected_return'] as const).filter((field) => {
+		const value = body[field]
+
+		return value !== undefined && value !== null && Number.isNaN(new Date(value).getTime())
+	})
+
+	if (invalidDateFields.length > 0) {
+		return HttpResponse.json(
+			{
+				detail: invalidDateFields.map((field) => ({
+					type: 'value_error',
+					loc: ['body', field],
+					msg: `Value error, ${INVALID_DATE_MESSAGE}`,
+				})),
+			},
+			{ status: 422 },
+		)
+	}
+
 	if (body.dispatched_at && body.expected_return && body.expected_return < body.dispatched_at) {
 		return detailResponse(422, 'Retorno previsto não pode ser anterior ao despacho')
+	}
+
+	if (body.dispatched_at && body.expected_arrival && body.expected_arrival < body.dispatched_at) {
+		return detailResponse(422, 'Chegada prevista não pode ser anterior ao despacho')
+	}
+
+	if (body.expected_arrival && body.expected_return && body.expected_return < body.expected_arrival) {
+		return detailResponse(422, 'Retorno previsto não pode ser anterior à chegada prevista')
 	}
 
 	const pastArrival = body.expected_arrival && new Date(body.expected_arrival) < startOfTodayUtc()

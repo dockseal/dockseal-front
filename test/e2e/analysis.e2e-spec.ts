@@ -18,7 +18,7 @@ test('resultado divergente mostra ocorrências, correção, ausentes e conferido
 
 	const critical = page.getByRole('article', { name: 'Divergência: número do contêiner' })
 
-	await expect(critical.getByRole('row').filter({ hasText: 'MSCU7654321' })).toContainText('nf.txt')
+	await expect(critical.getByRole('row').filter({ hasText: 'MSCU7654329' })).toContainText('nf.txt')
 	await expect(critical).toContainText('Corrigir em: nf.txt')
 	await expect(page.getByRole('article', { name: 'Divergência: peso bruto' })).toContainText(
 		'Requer conferência humana',

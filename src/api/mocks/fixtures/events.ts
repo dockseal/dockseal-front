@@ -28,7 +28,7 @@ export function buildEvents(): IProcessEvent[] {
 		}),
 		event(7, 'VALIDATION', 'DIVERGENTE', '2026-10-10T12:20:00Z'),
 		event(6, 'DOCUMENTS_UPLOADED', 'SUCCESS', '2026-10-10T12:11:00Z', { observation: '2 documento(s)' }),
-		event(5, 'CONTAINER_ASSOCIATED', 'SUCCESS', '2026-10-10T12:05:00Z', { observation: 'MSCU1234567' }),
+		event(5, 'CONTAINER_ASSOCIATED', 'SUCCESS', '2026-10-10T12:05:00Z', { observation: 'MSCU1234566' }),
 		event(4, 'SHIPMENT_CREATED', 'SUCCESS', '2026-10-10T12:00:00Z'),
 		event(3, 'ANALYSIS', 'CONFORME', '2026-10-09T15:00:00Z', { shipment_id: null }),
 		event(2, 'LOGIN', 'FAILURE', '2026-10-09T09:59:00Z', { shipment_id: null, user_id: null }),

@@ -32,7 +32,7 @@ Este documento define a arquitetura técnica, padrões de desenvolvimento e o ba
 *   **Senha**: Mínimo de 8 caracteres, contendo letras maiúsculas, minúsculas, números e caracteres especiais. Armazenamento no banco via hash (`bcrypt` padrão do Django).
 *   **E-mail**: Regex padrão de validação de e-mail corporativo. Único por usuário no banco de dados.
 *   **CPF/CNPJ** (Se aplicável para empresas e motoristas): Trafega sem máscara (`12345678909`), Frontend aplica máscara na view (`123.456.789-09`). Backend valida o dígito verificador.
-*   **Identificador de Contêiner**: Padrão ISO 6346 (4 letras + 7 números). Ex: `MSCU7742123`.
+*   **Identificador de Contêiner**: Padrão ISO 6346 (4 letras + 7 números). Ex: `MSCU7742121`. O 11º caractere é o dígito verificador calculado pela norma. O campo "Código ISO" é sempre `6346` (somente leitura).
 
 ---
 

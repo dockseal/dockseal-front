@@ -1,4 +1,5 @@
 import type { IContainerInput, ICreateShipmentInput, IShipment } from '@/@types/shipment'
+import { CONTAINER_ISO_CODE } from '@/constants/shipment'
 import type { TContainerFormValues } from '@/schemas/shipments/container-form.schema'
 import type { TShipmentFormValues } from '@/schemas/shipments/shipment-form.schema'
 import { normalizeContainerNumber } from '@/utils/container'
@@ -14,10 +15,10 @@ function withoutUndefined<T extends object>(value: T) {
 	return Object.fromEntries(Object.entries(value).filter(([, entry]) => entry !== undefined)) as T
 }
 
-function buildContainerInput(number: string, isoCode: string, type: string, owner: string): IContainerInput {
+function buildContainerInput(number: string, type: string, owner: string): IContainerInput {
 	return withoutUndefined({
 		container_number: normalizeContainerNumber(number),
-		iso_code: optional(isoCode),
+		iso_code: CONTAINER_ISO_CODE,
 		type: optional(type),
 		owner: optional(owner),
 	})
@@ -35,13 +36,13 @@ export function toCreateShipmentInput(values: TShipmentFormValues): ICreateShipm
 		expected_arrival: toIsoUtc(values.expectedArrival),
 		expected_return: toIsoUtc(values.expectedReturn),
 		container: containerNumber
-			? buildContainerInput(containerNumber, values.containerIsoCode, values.containerType, values.containerOwner)
+			? buildContainerInput(containerNumber, values.containerType, values.containerOwner)
 			: undefined,
 	})
 }
 
 export function toContainerInput(values: TContainerFormValues) {
-	return buildContainerInput(values.containerNumber, values.isoCode, values.type, values.owner)
+	return buildContainerInput(values.containerNumber, values.type, values.owner)
 }
 
 export function getShipmentLabel(shipment: Pick<IShipment, 'id' | 'shipment_id_custom'>) {

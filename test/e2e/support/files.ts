@@ -1,4 +1,4 @@
-export function textFile(name: string, content = 'Bill of Lading MSCU1234567 peso bruto 18.000 kg') {
+export function textFile(name: string, content = 'Bill of Lading MSCU1234566 peso bruto 18.000 kg') {
 	return { name, mimeType: 'text/plain', buffer: Buffer.from(content) }
 }
 

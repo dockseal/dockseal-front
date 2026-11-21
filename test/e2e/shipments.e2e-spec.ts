@@ -44,7 +44,7 @@ test.describe('lista de embarques', () => {
 		await seedSession(page, 'GESTOR')
 		await page.goto('/shipments')
 		await expect(bodyRows(page).first()).toContainText('20/11/2026')
-		await expect(bodyRows(page).first()).toContainText('MSCU 123456-7')
+		await expect(bodyRows(page).first()).toContainText('MSCU 123456-6')
 	})
 })
 
@@ -75,6 +75,57 @@ test.describe('novo embarque', () => {
 		await expect(page.getByText('Informe a origem.')).toBeVisible()
 		await expect(page.getByText('Informe o destino.')).toBeVisible()
 		await expect(page.getByText('Use o padrão ISO 6346: 4 letras e 7 números.')).toBeVisible()
+		await expect(page.getByLabel('Número do contêiner')).toHaveValue('MSC')
+		expect(posts).toBe(0)
+	})
+
+	test('aplica a máscara no número do contêiner e mantém o código ISO somente leitura', async ({ page }) => {
+		await seedSession(page, 'OPERADOR')
+		await page.goto('/shipments/new')
+
+		const number = page.getByLabel('Número do contêiner')
+
+		await number.pressSequentially('mscu1234566')
+		await expect(number).toHaveValue('MSCU 123456-6')
+		await number.fill('')
+		await number.pressSequentially('12-mscu 99')
+		await expect(number).toHaveValue('MSCU 99')
+		await expect(page.getByLabel('Código ISO')).toHaveValue('6346')
+		await expect(page.getByLabel('Código ISO')).not.toBeEditable()
+	})
+
+	test('recusa contêiner com dígito verificador errado e indica o correto', async ({ page }) => {
+		let posts = 0
+
+		page.on('request', (request) => {
+			if (request.method() === 'POST' && request.url().endsWith('/shipments')) posts++
+		})
+
+		await seedSession(page, 'OPERADOR')
+		await page.goto('/shipments/new')
+		await page.getByLabel('Origem').fill('Porto de Santos')
+		await page.getByLabel('Destino').fill('Roterdã')
+		await page.getByLabel('Número do contêiner').fill('MSCU1234567')
+		await page.getByRole('button', { name: 'Registrar embarque' }).click()
+		await expect(page.getByText('Dígito verificador inválido. O correto para MSCU123456 é 6.')).toBeVisible()
+		expect(posts).toBe(0)
+	})
+
+	test('recusa data inexistente (31/11) sem criar o embarque', async ({ page }) => {
+		let posts = 0
+
+		page.on('request', (request) => {
+			if (request.method() === 'POST' && request.url().endsWith('/shipments')) posts++
+		})
+
+		await seedSession(page, 'OPERADOR')
+		await page.goto('/shipments/new')
+		await page.getByLabel('Origem').fill('Porto de Santos')
+		await page.getByLabel('Destino').fill('Roterdã')
+		await page.getByLabel('Despacho').click()
+		await page.keyboard.type('311120261000')
+		await page.getByRole('button', { name: 'Registrar embarque' }).click()
+		await expect(page.getByText('Informe uma data válida.')).toBeVisible()
 		expect(posts).toBe(0)
 	})
 

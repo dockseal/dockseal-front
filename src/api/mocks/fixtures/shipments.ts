@@ -10,16 +10,16 @@ export function mockShipmentId(index: number) {
 export const MOCK_CONTAINERS: IContainer[] = [
 	{
 		id: 'c0000000-0000-4000-8000-000000000001',
-		container_number: 'MSCU1234567',
-		iso_code: '22G1',
+		container_number: 'MSCU1234566',
+		iso_code: '6346',
 		type: "Dry 20'",
 		owner: 'MSC',
 		status: 'IN_TRANSIT',
 	},
 	{
 		id: 'c0000000-0000-4000-8000-000000000002',
-		container_number: 'TGHU7654321',
-		iso_code: '45G1',
+		container_number: 'TGHU7654320',
+		iso_code: '6346',
 		type: "High Cube 40'",
 		owner: 'Maersk',
 		status: 'IN_TRANSIT',

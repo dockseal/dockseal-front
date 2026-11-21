@@ -94,8 +94,8 @@ test('detalhes abrem o painel com a divergência completa', async ({ page }) => 
 	const sheet = page.getByRole('dialog')
 
 	await expect(sheet.getByRole('heading', { name: 'número do contêiner' })).toBeVisible()
-	await expect(sheet.getByText('Corrigir o número do contêiner na Nota Fiscal para MSCU1234567.').first()).toBeVisible()
-	await expect(sheet.getByRole('row').filter({ hasText: 'MSCU7654321' })).toContainText('nota_fiscal.docx')
+	await expect(sheet.getByText('Corrigir o número do contêiner na Nota Fiscal para MSCU1234566.').first()).toBeVisible()
+	await expect(sheet.getByRole('row').filter({ hasText: 'MSCU7654329' })).toContainText('nota_fiscal.docx')
 })
 
 test('gestor resolve com nota', async ({ page }) => {

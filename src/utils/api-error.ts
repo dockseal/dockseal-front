@@ -1,7 +1,12 @@
 import { isAxiosError } from 'axios'
 
-import type { IApiErrorBody } from '@/@types/api-error'
-import { API_DETAIL_STATUSES, FIELD_ERROR_MESSAGE, HTTP_ERROR_MESSAGE } from '@/constants/api-errors'
+import type { IApiErrorBody, IValidationErrorItem } from '@/@types/api-error'
+import {
+	API_CUSTOM_MESSAGE_PREFIX,
+	API_DETAIL_STATUSES,
+	FIELD_ERROR_MESSAGE,
+	HTTP_ERROR_MESSAGE,
+} from '@/constants/api-errors'
 
 function getErrorBody(error: unknown): IApiErrorBody | undefined {
 	if (!isAxiosError(error)) return undefined
@@ -13,6 +18,12 @@ function getErrorBody(error: unknown): IApiErrorBody | undefined {
 	}
 
 	return undefined
+}
+
+function getCustomValidationMessage(item: IValidationErrorItem) {
+	if (item.type !== 'value_error' || !item.msg.startsWith(API_CUSTOM_MESSAGE_PREFIX)) return undefined
+
+	return item.msg.slice(API_CUSTOM_MESSAGE_PREFIX.length)
 }
 
 export function getApiErrorStatus(error: unknown) {
@@ -35,6 +46,12 @@ export function getApiErrorMessage(error: unknown, fallback: string = HTTP_ERROR
 
 	if (isDetailStatus && typeof detail === 'string' && detail.trim()) return detail
 
+	if (isDetailStatus && Array.isArray(detail)) {
+		const customMessage = detail.map(getCustomValidationMessage).find(Boolean)
+
+		if (customMessage) return customMessage
+	}
+
 	if (status in HTTP_ERROR_MESSAGE) {
 		return HTTP_ERROR_MESSAGE[status as keyof typeof HTTP_ERROR_MESSAGE]
 	}
@@ -51,7 +68,7 @@ export function getApiFieldErrors(error: unknown): Record<string, string> {
 		const field = item.loc.at(-1)
 
 		if (field !== undefined) {
-			fields[String(field)] = FIELD_ERROR_MESSAGE
+			fields[String(field)] = getCustomValidationMessage(item) ?? FIELD_ERROR_MESSAGE
 		}
 
 		return fields

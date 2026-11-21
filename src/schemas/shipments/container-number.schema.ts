@@ -1,16 +1,22 @@
 import { z } from 'zod'
 
-import { isValidContainerNumber } from '@/utils/container'
+import { getContainerNumberError } from '@/utils/container'
 
-export const CONTAINER_NUMBER_MESSAGE = 'Use o padrão ISO 6346: 4 letras e 7 números.'
+function addContainerNumberIssue(value: string, context: z.RefinementCtx) {
+	const message = getContainerNumberError(value)
+
+	if (message) context.addIssue({ code: 'custom', message })
+}
 
 export const optionalContainerNumberSchema = z
 	.string()
 	.trim()
-	.refine((value) => value === '' || isValidContainerNumber(value), CONTAINER_NUMBER_MESSAGE)
+	.superRefine((value, context) => {
+		if (value !== '') addContainerNumberIssue(value, context)
+	})
 
 export const requiredContainerNumberSchema = z
 	.string()
 	.trim()
 	.min(1, 'Informe o número do contêiner.')
-	.refine(isValidContainerNumber, CONTAINER_NUMBER_MESSAGE)
+	.superRefine(addContainerNumberIssue)
